@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Illinois Board of Trustees.
+ * Copyright (C) 2017, 2018 University of Illinois Board of Trustees.
  *
  * This file is part of bTools.
  *
@@ -53,7 +53,7 @@ import edu.illinois.gernat.btools.common.io.token.TokenWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
 
 /**
- * @version 0.12.0
+ * @version 0.12.1
  * @since 0.12.0
  * @author Tim Gernat
  */
@@ -77,7 +77,7 @@ public class TrophallaxisDetector
 		
 	}
 
-	private static List<Contact> predictContacts(List<Record> records, int distanceLabelHead, int geometryMinDistance, int geometryMaxDistance, double geometryMaxAngleSum)
+	public static List<Contact> predictContacts(List<Record> records, int distanceLabelHead, int geometryMinDistance, int geometryMaxDistance, double geometryMaxAngleSum)
 	{
 		
 		// create contact for each pair of bees that meets the specified 
@@ -240,8 +240,8 @@ public class TrophallaxisDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("Trophallaxis Detector (bTools) 0.12.0");
-		System.out.println("Copyright (C) 2017 University of Illinois Board of Trustees");
+		System.out.println("Trophallaxis Detector (bTools) 0.12.1");
+		System.out.println("Copyright (C) 2017, 2018 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
@@ -269,7 +269,7 @@ public class TrophallaxisDetector
 		System.out.println("- geometry.min.distance     minimum distance between the geometrically");
 		System.out.println("                            predicted centers of the head of two potential");
 		System.out.println("                            interaction partners");
-		System.out.println("- image.file                input image file");
+		System.out.println("- image.filename            input image file");
 		System.out.println("- image.list.filename       plain text file listing on each line one input");
 		System.out.println("                            image file.");
 		System.out.println("- max.path.thickness        maximum thickness of a path connecting the heads");
@@ -296,15 +296,15 @@ public class TrophallaxisDetector
 		System.out.println("                            computer-vision-predicted centers of the heads of");
 		System.out.println("                            two potential interaction partners");
 		System.out.println("- filtered.data.file        file containing the bCode detection results for");
-		System.out.println("                            the file named by the image.file parameter. Must");
-		System.out.println("                            be sorted by timestamp column");
+		System.out.println("                            the file named by the image.filename parameter.");
+		System.out.println("                            Must be sorted by timestamp column");
 		System.out.println();
 		System.out.println("Notes:");
 		System.out.println("Input image filenames need to be a valid date in the format");
 		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.");
 		System.out.println();
-		System.out.println("Parameters image.file and trophallaxis.file cannot be specified in conjunction");
-		System.out.println("with the image.list.filename parameter.");
+		System.out.println("Parameters image.filename and trophallaxis.file cannot be specified in");
+		System.out.println("conjunction with the image.list.filename parameter.");
 		System.out.println();
 		System.out.println("If the image.list.filename parameter is given, trophallaxis output file names");
 		System.out.println("are constructed by replacing the input image file extension with 'txt'. Input");
