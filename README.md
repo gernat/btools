@@ -11,7 +11,7 @@ If you want to experiment with the code, choose a branch and download or clone t
 ## Main classes
 
 `BCodeMaker.java` - draws a set of 2048 unique bCodes.  
-`BCodeDetector.java` - detects bCodes in a digital images.  
+`BCodeDetector.java` - detects bCodes in digital images.  
 `Converter.java` - converts bCode detection results to human-readable plain text.  
 `Indexer.java` - indexes bCode detection results.  
 `TrophallaxisDetector.java` - detects liquid food exchange among bees.
