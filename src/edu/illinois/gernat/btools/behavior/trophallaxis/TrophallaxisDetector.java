@@ -53,7 +53,7 @@ import edu.illinois.gernat.btools.common.io.token.TokenWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
 
 /**
- * @version 0.12.1
+ * @version 0.12.2
  * @since 0.12.0
  * @author Tim Gernat
  */
@@ -240,7 +240,7 @@ public class TrophallaxisDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("Trophallaxis Detector (bTools) 0.12.1");
+		System.out.println("Trophallaxis Detector (bTools) 0.13.0");
 		System.out.println("Copyright (C) 2017, 2018 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
