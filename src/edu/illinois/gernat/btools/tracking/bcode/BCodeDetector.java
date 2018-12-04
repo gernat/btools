@@ -46,9 +46,10 @@ import ij.ImagePlus;
 import ij.Prefs;
 import ij.plugin.filter.UnsharpMask;
 import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
 
 /**
- * @version 0.13.0
+ * @version 0.14.0
  * @since 0.12.0
  * @author Tim Gernat
  */
@@ -63,6 +64,7 @@ public class BCodeDetector
 		parameters.initialize(args);
 		double sharpeningSigma = parameters.getDouble("sharpening.sigma"); // gaussian blur kernel radius ~= sigma * 3 + 1
 		double sharpeningAmount = parameters.getDouble("sharpening.amount");
+		float scalingFactor = (float) parameters.getDouble("scaling.factor");
 		Reader.minBlackThreshold = parameters.getInteger("min.intensity.threshold");
 		Reader.maxBlackThreshold = parameters.getInteger("max.intensity.threshold");
 		Reader.thresholdStepSize = parameters.getInteger("intensity.step.size");
@@ -83,20 +85,49 @@ public class BCodeDetector
 			return;
 		}
 		
-		// sharpen image
-		if (sharpeningAmount != 0)
+		// preprocess image
+		if ((scalingFactor != 1) || (sharpeningAmount != 0))
 		{
+			
+			// set up an ImageJ image processor
 			Prefs.setThreads(1);
-			ImagePlus imagePlus = new ImagePlus(null, image);
+			ImagePlus imagePlus = new ImagePlus(null, image);			
 			FloatProcessor floatProcessor = (FloatProcessor) imagePlus.getProcessor().convertToFloat();
-			floatProcessor.snapshot();			
-			UnsharpMask unsharpMask = new UnsharpMask();
-			unsharpMask.sharpenFloat(floatProcessor, sharpeningSigma, (float) sharpeningAmount);
-			image = floatProcessor.getBufferedImage();
+			
+			// scale image
+			if (scalingFactor != 1)
+			{
+				floatProcessor.setInterpolationMethod(ImageProcessor.BILINEAR);
+				floatProcessor = (FloatProcessor) floatProcessor.resize((int) (floatProcessor.getWidth() * scalingFactor));
+			}
+			
+			// sharpen image
+			if (sharpeningAmount != 0)
+			{
+				floatProcessor.snapshot();			
+				UnsharpMask unsharpMask = new UnsharpMask();
+				unsharpMask.sharpenFloat(floatProcessor, sharpeningSigma, (float) sharpeningAmount);
+				image = floatProcessor.getBufferedImage();
+			}
+			
 		}
-
+		
 		// detect IDs
 		List<MetaCode> metaIDs = Reader.read(image);		
+		
+		// postprocess bCode detections
+		if (scalingFactor != 1)
+		{
+			for (MetaCode metaID : metaIDs) 
+			{				
+				metaID.center.set(metaID.center.x / scalingFactor, metaID.center.y / scalingFactor);
+				metaID.moduleSize /= scalingFactor;
+				metaID.nw.set(metaID.nw.x / scalingFactor, metaID.nw.y / scalingFactor);
+				metaID.ne.set(metaID.ne.x / scalingFactor, metaID.ne.y / scalingFactor);
+				metaID.sw.set(metaID.sw.x / scalingFactor, metaID.sw.y / scalingFactor);
+				metaID.se.set(metaID.se.x / scalingFactor, metaID.se.y / scalingFactor);
+			}
+		}
 		
 		// get image timestamp from filename
 		long timestamp = Images.getTimestampFromFilename(imageFilename);
@@ -154,6 +185,7 @@ public class BCodeDetector
 		System.out.println("- image.filename            input image file");
 		System.out.println("- image.list.filename       plain text file listing on each line one input");
 		System.out.println("                            image file");
+		System.out.println("- scaling.factor       		factor for image scaling prior to detecting bCodes");
 		System.out.println("- intensity.step.size       increment when going from the lowest to the highest");
 		System.out.println("                            intensity threshold");
 		System.out.println("- max.intensity.threshold   highest intensity threshold for converting to a");

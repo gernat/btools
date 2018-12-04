@@ -6,3 +6,4 @@
 
 - Fixed trophallaxis detector usage text.
 - Added image sharpening to bCode detector.
+- Added image scaling to bCode detector.
