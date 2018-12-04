@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Illinois Board of Trustees.
+ * Copyright (C) 2017, 2018 University of Illinois Board of Trustees.
  *
  * This file is part of bTools.
  *
@@ -19,6 +19,7 @@
 
 package edu.illinois.gernat.btools.tracking.bcode;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
+
 import com.google.zxing.NotFoundException;
 
 import edu.illinois.gernat.btools.common.image.Images;
@@ -39,9 +42,13 @@ import edu.illinois.gernat.btools.common.io.record.Record;
 import edu.illinois.gernat.btools.common.io.record.RecordReader;
 import edu.illinois.gernat.btools.common.io.record.RecordWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
+import ij.ImagePlus;
+import ij.Prefs;
+import ij.plugin.filter.UnsharpMask;
+import ij.process.FloatProcessor;
 
 /**
- * @version 0.12.0
+ * @version 0.13.0
  * @since 0.12.0
  * @author Tim Gernat
  */
@@ -54,6 +61,8 @@ public class BCodeDetector
 		// set parameters
 		Parameters parameters = Parameters.INSTANCE;
 		parameters.initialize(args);
+		double sharpeningSigma = parameters.getDouble("sharpening.sigma"); // gaussian blur kernel radius ~= sigma * 3 + 1
+		double sharpeningAmount = parameters.getDouble("sharpening.amount");
 		Reader.minBlackThreshold = parameters.getInteger("min.intensity.threshold");
 		Reader.maxBlackThreshold = parameters.getInteger("max.intensity.threshold");
 		Reader.thresholdStepSize = parameters.getInteger("intensity.step.size");
@@ -66,12 +75,32 @@ public class BCodeDetector
 		File file = new File(detectedBcodesFilename);
 		if (file.exists()) file.delete();
 		
-		// get time stamp from filename
-		long timestamp = Images.getTimestampFromFilename(imageFilename);  
+		// read image
+		BufferedImage image = ImageIO.read(new File(imageFilename));
+		if (image == null) 
+		{
+			System.err.println("image processor: cannot read image file '" + imageFilename + "'.");
+			return;
+		}
 		
-		// detect IDs
-		List<MetaCode> metaIDs = Reader.read(imageFilename);		
+		// sharpen image
+		if (sharpeningAmount != 0)
+		{
+			Prefs.setThreads(1);
+			ImagePlus imagePlus = new ImagePlus(null, image);
+			FloatProcessor floatProcessor = (FloatProcessor) imagePlus.getProcessor().convertToFloat();
+			floatProcessor.snapshot();			
+			UnsharpMask unsharpMask = new UnsharpMask();
+			unsharpMask.sharpenFloat(floatProcessor, sharpeningSigma, (float) sharpeningAmount);
+			image = floatProcessor.getBufferedImage();
+		}
 
+		// detect IDs
+		List<MetaCode> metaIDs = Reader.read(image);		
+		
+		// get image timestamp from filename
+		long timestamp = Images.getTimestampFromFilename(imageFilename);
+		
 		// write ID data to file 
 		List<Record> records = new ArrayList<Record>();
 		String tmpFilename = imageFilename.substring(0, imageFilename.length() - 4) + ".tmp";
@@ -106,8 +135,8 @@ public class BCodeDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("bCode Detector (bTools) 0.12.0");
-		System.out.println("Copyright (C) 2017 University of Illinois Board of Trustees");
+		System.out.println("bCode Detector (bTools) 0.13.0");
+		System.out.println("Copyright (C) 2017, 2018 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
@@ -133,6 +162,9 @@ public class BCodeDetector
 		System.out.println("                            binary image");
 		System.out.println("- min.template.conservation fraction of bCode modules that need to match the");
 		System.out.println("                            bCode template");
+		System.out.println("- sharpening.amount         amount of sharpening during unsharp masking");
+		System.out.println("- sharpening.sigma          Gaussian blur standard deviation for unsharp");		
+		System.out.println("                            masking");		
 		System.out.println("- show.credits              set to \"true\" or 1 to display credits and exit");
 		System.out.println();
 		System.out.println("Notes:");
