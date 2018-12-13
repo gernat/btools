@@ -4,21 +4,21 @@ bTools is a set of programs for identifying and tracking insects in image sequen
 
 # Getting started
 
-If you want executable binaries, download them from our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions on our [website](http://www.beemonitoring.igb.illinois.edu/index.html#software).
+If you want executable binaries, download them from our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions in the [wiki](https://github.com/gernat/btools/wiki).
 
-If you want to experiment with the code, choose a branch and download or clone the repository. Import the `scr` folder in your favorite IDE and add the JAR packages in the `lib` folder to the Java classpath. You are ready to go.
+If you want to experiment with the code, choose a branch and download or clone the repository. Import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go.
 
 ## Main classes
 
 `BCodeMaker.java` - draws a set of 2048 unique bCodes.  
 `BCodeDetector.java` - detects bCodes in digital images.  
-`Converter.java` - converts bCode detection results to human-readable plain text.  
-`Indexer.java` - indexes bCode detection results.  
+`Converter.java` - converts raw bCode detection results to a more useful format.  
+`Indexer.java` - indexes raw bCode detection results.  
 `TrophallaxisDetector.java` - detects liquid food exchange among bees.
 
 # Documentation
 
-Brief documentation is available on the [bTools website](http://www.beemonitoring.igb.illinois.edu/index.html#software).
+Brief documentation and a tutorial are available in the [wiki](https://github.com/gernat/btools/wiki).
 
 # Versions
 
@@ -38,4 +38,4 @@ This software is distributed under the [GNU Affero General Public License v3 lic
 
 # Contact
 
-If you have questions about bTools, please contact [Tim](mailto:gernat@illinois.edu).
+If you have questions about bTools, please contact [Tim](mailto:gernat@illinois.edu).ntact [Tim](mailto:gernat@illinois.edu).
