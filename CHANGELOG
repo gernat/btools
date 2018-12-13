@@ -2,6 +2,7 @@
 
 - Reordered CHANGELOG.
 - Updated README.
+- Fixed parameter processing in trophallaxis detector.
 
 0.13.0
 

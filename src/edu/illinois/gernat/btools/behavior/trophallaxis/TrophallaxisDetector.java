@@ -357,7 +357,7 @@ public class TrophallaxisDetector
 		
 		// create map from input file to output file
 		HashMap<String, String> ioMap = new HashMap<>();
-		if (!parameters.exists("image.list.filename")) ioMap.put(parameters.getString("image.filename"), parameters.getString("detected.bCodes.filename"));
+		if (!parameters.exists("image.list.filename")) ioMap.put(parameters.getString("image.filename"), parameters.getString("trophallaxis.file"));
 		else
 		{
 			String imageListFilename = parameters.getString("image.list.filename");
