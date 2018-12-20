@@ -38,4 +38,4 @@ This software is distributed under the [GNU Affero General Public License v3 lic
 
 # Contact
 
-If you have questions about bTools, please contact [Tim](mailto:gernat@illinois.edu).ntact [Tim](mailto:gernat@illinois.edu).
+If you have questions about bTools, please contact [Tim](mailto:gernat@illinois.edu).
