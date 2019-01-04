@@ -42,11 +42,6 @@ import edu.illinois.gernat.btools.common.io.record.Record;
 import edu.illinois.gernat.btools.common.io.record.RecordReader;
 import edu.illinois.gernat.btools.common.io.record.RecordWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
-import ij.ImagePlus;
-import ij.Prefs;
-import ij.plugin.filter.UnsharpMask;
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
 
 /**
  * @version 0.14.0
@@ -62,9 +57,9 @@ public class BCodeDetector
 		// set parameters
 		Parameters parameters = Parameters.INSTANCE;
 		parameters.initialize(args);
-		double sharpeningSigma = parameters.getDouble("sharpening.sigma"); // gaussian blur kernel radius ~= sigma * 3 + 1
-		double sharpeningAmount = parameters.getDouble("sharpening.amount");
-		float scalingFactor = (float) parameters.getDouble("scaling.factor");
+		Preprocessor.sharpeningSigma = parameters.getDouble("sharpening.sigma"); 
+		Preprocessor.sharpeningAmount = parameters.getDouble("sharpening.amount");
+		Preprocessor.scalingFactor = (float) parameters.getDouble("scaling.factor");
 		Reader.minBlackThreshold = parameters.getInteger("min.intensity.threshold");
 		Reader.maxBlackThreshold = parameters.getInteger("max.intensity.threshold");
 		Reader.thresholdStepSize = parameters.getInteger("intensity.step.size");
@@ -86,47 +81,22 @@ public class BCodeDetector
 		}
 		
 		// preprocess image
-		if ((scalingFactor != 1) || (sharpeningAmount != 0))
-		{
-			
-			// set up an ImageJ image processor
-			Prefs.setThreads(1);
-			ImagePlus imagePlus = new ImagePlus(null, image);			
-			FloatProcessor floatProcessor = (FloatProcessor) imagePlus.getProcessor().convertToFloat();
-			
-			// scale image
-			if (scalingFactor != 1)
-			{
-				floatProcessor.setInterpolationMethod(ImageProcessor.BILINEAR);
-				floatProcessor = (FloatProcessor) floatProcessor.resize((int) (floatProcessor.getWidth() * scalingFactor));
-				if (sharpeningAmount == 0) image = floatProcessor.getBufferedImage();
-			}
-			
-			// sharpen image
-			if (sharpeningAmount != 0)
-			{
-				floatProcessor.snapshot();			
-				UnsharpMask unsharpMask = new UnsharpMask();
-				unsharpMask.sharpenFloat(floatProcessor, sharpeningSigma, (float) sharpeningAmount);
-				image = floatProcessor.getBufferedImage();
-			}
-			
-		}
+		image = Preprocessor.preprocess(image);
 		
 		// detect IDs
 		List<MetaCode> metaIDs = Reader.read(image);		
 		
 		// postprocess bCode detections
-		if (scalingFactor != 1)
+		if (Preprocessor.scalingFactor != 1)
 		{
 			for (MetaCode metaID : metaIDs) 
 			{				
-				metaID.center.set(metaID.center.x / scalingFactor, metaID.center.y / scalingFactor);
-				metaID.moduleSize /= scalingFactor;
-				metaID.nw.set(metaID.nw.x / scalingFactor, metaID.nw.y / scalingFactor);
-				metaID.ne.set(metaID.ne.x / scalingFactor, metaID.ne.y / scalingFactor);
-				metaID.sw.set(metaID.sw.x / scalingFactor, metaID.sw.y / scalingFactor);
-				metaID.se.set(metaID.se.x / scalingFactor, metaID.se.y / scalingFactor);
+				metaID.center.set(metaID.center.x / Preprocessor.scalingFactor, metaID.center.y / Preprocessor.scalingFactor);
+				metaID.moduleSize /= Preprocessor.scalingFactor;
+				metaID.nw.set(metaID.nw.x / Preprocessor.scalingFactor, metaID.nw.y / Preprocessor.scalingFactor);
+				metaID.ne.set(metaID.ne.x / Preprocessor.scalingFactor, metaID.ne.y / Preprocessor.scalingFactor);
+				metaID.sw.set(metaID.sw.x / Preprocessor.scalingFactor, metaID.sw.y / Preprocessor.scalingFactor);
+				metaID.se.set(metaID.se.x / Preprocessor.scalingFactor, metaID.se.y / Preprocessor.scalingFactor);
 			}
 		}
 		
