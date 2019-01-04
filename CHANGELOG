@@ -3,6 +3,7 @@
 - Reordered CHANGELOG.
 - Updated README.
 - Fixed parameter processing in trophallaxis detector.
+- Fixed image preprocessing bug in bCode detector.
 
 0.13.0
 

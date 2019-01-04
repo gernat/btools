@@ -99,6 +99,7 @@ public class BCodeDetector
 			{
 				floatProcessor.setInterpolationMethod(ImageProcessor.BILINEAR);
 				floatProcessor = (FloatProcessor) floatProcessor.resize((int) (floatProcessor.getWidth() * scalingFactor));
+				if (sharpeningAmount == 0) image = floatProcessor.getBufferedImage();
 			}
 			
 			// sharpen image
