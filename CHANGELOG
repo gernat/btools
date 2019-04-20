@@ -5,6 +5,7 @@
 - Fixed parameter processing in trophallaxis detector.
 - Fixed image preprocessing bug in bCode detector.
 - Fixed margins in bCode maker.
+- Improved bCode maker bCode layout.
 
 0.13.0
 
