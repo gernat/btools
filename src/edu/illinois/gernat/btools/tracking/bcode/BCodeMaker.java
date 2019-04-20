@@ -238,12 +238,13 @@ public class BCodeMaker
 		
 		// perform some calculations
 		int cuttingLineExcessLength = Math.round(toPixels(CUTTING_LINE_EXCESS_LENGTH));
-		int squareSideLength = Writer.getLabelSideLength(LABEL_TYPE, labelZoom) + 2 * (CUTTING_LINE_WIDTH) + 2 * labelExtraMargin;
+		int labelWidthOffset = LABEL_TYPE == Writer.TYPE_SOLID ? 0 : -1;
+		int squareSideLength = Writer.getLabelSideLength(LABEL_TYPE, labelZoom) + 2 * (CUTTING_LINE_WIDTH) + 2 * labelExtraMargin + labelWidthOffset;
 		int squareSpacerWidth = Math.round(toPixels(LABEL_SPACER_WIDTH));
 		int groupSideLength = GROUP_SIDE_LENGTH * squareSideLength + (GROUP_SIDE_LENGTH - 1) * squareSpacerWidth;
 		int groupSpacerWidth = Math.round(toPixels(GROUP_SPACER_WIDTH / 2)) * 2;
 		int width = GROUP_X_COUNT * groupSideLength + (GROUP_X_COUNT + 1) * groupSpacerWidth; 
-		int height = GROUP_Y_COUNT * groupSideLength + (GROUP_Y_COUNT + 1) * groupSpacerWidth;
+		int height = GROUP_Y_COUNT * groupSideLength + (GROUP_Y_COUNT + 1) * groupSpacerWidth;		
 		
 		// create a blank image
 		BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
