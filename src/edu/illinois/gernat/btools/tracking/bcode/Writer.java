@@ -44,6 +44,8 @@ public final class Writer
 	public static final int TYPE_GRID2 = 2;
 	
 	public static final int TYPE_GRID3 = 3;
+	
+	public static final int TYPE_CORNERS = 4;
 
 	private Writer()
 	{
@@ -114,6 +116,13 @@ public final class Writer
 					if (code.get(x - 1, y - 1) && code.get(x, y - 1) && (!code.get(x - 1, y)) && code.get(x, y)) graphics.drawLine(x * zoom, y * zoom - 2, x * zoom, y * zoom - 2);
 					if ((!code.get(x - 1, y - 1)) && code.get(x, y - 1) && code.get(x - 1, y) && code.get(x, y)) graphics.drawLine(x * zoom, y * zoom, x * zoom, y * zoom);
 					if (code.get(x - 1, y - 1) && (!code.get(x, y - 1)) && code.get(x - 1, y) && code.get(x, y)) graphics.drawLine(x * zoom - 2, y * zoom, x * zoom - 2, y * zoom);
+				}
+				if ((type == TYPE_CORNERS) && (x > 0) && (y > 0))
+				{
+					if (code.get(x - 1, y - 1) && code.get(x, y - 1) && code.get(x - 1, y) && (!code.get(x, y))) graphics.drawLine(x * zoom - 1, y * zoom - 1, x * zoom - 1, y * zoom - 1);
+					if (code.get(x - 1, y - 1) && code.get(x, y - 1) && (!code.get(x - 1, y)) && code.get(x, y)) graphics.drawLine(x * zoom, y * zoom - 1, x * zoom, y * zoom - 1);
+					if ((!code.get(x - 1, y - 1)) && code.get(x, y - 1) && code.get(x - 1, y) && code.get(x, y)) graphics.drawLine(x * zoom, y * zoom, x * zoom, y * zoom);
+					if (code.get(x - 1, y - 1) && (!code.get(x, y - 1)) && code.get(x - 1, y) && code.get(x, y)) graphics.drawLine(x * zoom - 1, y * zoom, x * zoom - 1, y * zoom);
 				}
 			}
 		}

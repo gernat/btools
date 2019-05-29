@@ -1,18 +1,19 @@
 0.13.1
 
-- Reordered CHANGELOG.
-- Updated README.
-- Fixed parameter processing in trophallaxis detector.
-- Fixed image preprocessing bug in bCode detector.
-- Fixed margins in bCode maker.
-- Improved bCode maker bCode layout.
+- Reorders CHANGELOG.
+- Updates README.
+- Fixes parameter processing bug in trophallaxis detector.
+- Fixes image preprocessing bug in bCode detector.
+- Fixes margins in bCode maker.
+- Improves bCode maker bCode layout.
+- Adds a high-resolution bCode printing mask.
 
 0.13.0
 
-- Fixed trophallaxis detector usage text.
-- Added image sharpening to bCode detector.
-- Added image scaling to bCode detector.
-- Fixed typo in README.
+- Fixes trophallaxis detector usage text.
+- Adds image sharpening to bCode detector.
+- Adds image scaling to bCode detector.
+- Fixes typo in README.
 
 0.12.0
 

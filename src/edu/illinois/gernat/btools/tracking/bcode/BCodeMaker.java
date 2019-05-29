@@ -50,7 +50,7 @@ public class BCodeMaker
 	
 	private static final boolean LABEL_INVERT = false;
 
-	private static final int LABEL_TYPE = Writer.TYPE_GRID3;
+	private static final int LABEL_TYPE = Writer.TYPE_CORNERS;
 	
 	private static final float LABEL_SPACER_WIDTH = 0f; // mm 
 	
@@ -238,7 +238,7 @@ public class BCodeMaker
 		
 		// perform some calculations
 		int cuttingLineExcessLength = Math.round(toPixels(WHISKER_LENGTH));
-		int labelWidthOffset = LABEL_TYPE == Writer.TYPE_SOLID ? 0 : -1;
+		int labelWidthOffset = ((LABEL_TYPE == Writer.TYPE_SOLID) || (LABEL_TYPE == Writer.TYPE_CORNERS)) ? 0 : -1;
 		int squareSideLength = Writer.getLabelSideLength(LABEL_TYPE, labelZoom) + 2 * (CUTTING_LINE_WIDTH) + 2 * labelExtraMargin + labelWidthOffset;
 		int squareSpacerWidth = Math.round(toPixels(LABEL_SPACER_WIDTH));
 		int groupSideLength = GROUP_SIDE_LENGTH * squareSideLength + (GROUP_SIDE_LENGTH - 1) * squareSpacerWidth;
