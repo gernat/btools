@@ -54,7 +54,7 @@ public class BCodeMaker
 	
 	private static final float LABEL_SPACER_WIDTH = 0f; // mm 
 	
-	private static final int CUTTING_LINE_WIDTH = 1; // dots
+	private static final int CUTTING_LINE_WIDTH = 3; // dots
 	
 	private static final float WHISKER_LENGTH = 5f; // mm
 
@@ -84,42 +84,38 @@ public class BCodeMaker
 				int groupYOffset = groupSpacerWidth + groupRow * (groupSideLength + groupSpacerWidth);
 
 				// loop over rows 
-				for (int squareRow = -1; squareRow <= GROUP_SIDE_LENGTH; squareRow++) 
+				for (int squareRow = -1; squareRow < GROUP_SIDE_LENGTH; squareRow++) 
 				{
 					
 					// calculate offset
-					int y = groupYOffset + squareRow * (squareSideLength + squareSpacerWidth);
+					int y = groupYOffset + squareRow * (squareSideLength + cuttingLineWidth + squareSpacerWidth);
 					
 					// draw whiskers
 					graphics.setColor(Color.BLACK);
-					if (squareRow > - 1) graphics.drawLine(groupXOffset - cuttingLineExcessLength, y, groupXOffset + groupSideLength + cuttingLineExcessLength - 1, y);
-					if (squareRow < GROUP_SIDE_LENGTH) graphics.drawLine(groupXOffset - cuttingLineExcessLength, y + squareSideLength - 1, groupXOffset + groupSideLength + cuttingLineExcessLength - 1, y + squareSideLength - 1);
+					for (int i = 0; i < cuttingLineWidth; i++) graphics.drawLine(groupXOffset - cuttingLineExcessLength - cuttingLineWidth, y + squareSideLength + i, groupXOffset + groupSideLength + cuttingLineExcessLength - cuttingLineWidth - 1, y + squareSideLength + i);
 					
 					// draw dividers
 					if (LABEL_INVERT) graphics.setColor(Color.WHITE);
 					else graphics.setColor(Color.BLACK);
-					if (squareRow > - 1) graphics.drawLine(groupXOffset, y, groupXOffset + groupSideLength - 1, y);
-					if (squareRow < GROUP_SIDE_LENGTH) graphics.drawLine(groupXOffset, y + squareSideLength - 1, groupXOffset + groupSideLength - 1, y + squareSideLength - 1);
+					for (int i = 0; i < cuttingLineWidth; i++) graphics.drawLine(groupXOffset - cuttingLineWidth, y + squareSideLength + i, groupXOffset + groupSideLength - cuttingLineWidth - 1, y + squareSideLength + i);
 
 				}
 
 				// loop over columns
-				for (int squareColumn = - 1; squareColumn <= GROUP_SIDE_LENGTH; squareColumn++) 
+				for (int squareColumn = - 1; squareColumn < GROUP_SIDE_LENGTH; squareColumn++) 
 				{
 					
 					// calculate offset
-					int x = groupXOffset + squareColumn * (squareSideLength + squareSpacerWidth);
+					int x = groupXOffset + squareColumn * (squareSideLength + cuttingLineWidth + squareSpacerWidth);
 
 					// draw whiskers
 					graphics.setColor(Color.BLACK);
-					if (squareColumn > - 1) graphics.drawLine(x, groupYOffset - cuttingLineExcessLength, x, groupYOffset + groupSideLength + cuttingLineExcessLength - 1);
-					if (squareColumn < GROUP_SIDE_LENGTH) graphics.drawLine(x + squareSideLength - 1, groupYOffset - cuttingLineExcessLength, x + squareSideLength - 1, groupYOffset + groupSideLength + cuttingLineExcessLength - 1);
-
+					for (int i = 0; i < cuttingLineWidth; i++) graphics.drawLine(x + squareSideLength + i, groupYOffset - cuttingLineExcessLength - cuttingLineWidth, x + squareSideLength + i, groupYOffset + groupSideLength + cuttingLineExcessLength - cuttingLineWidth - 1);
+					
 					// draw dividers
 					if (LABEL_INVERT) graphics.setColor(Color.WHITE);
 					else graphics.setColor(Color.BLACK);
-					if (squareColumn > - 1) graphics.drawLine(x, groupYOffset, x, groupYOffset + groupSideLength - 1);
-					if (squareColumn < GROUP_SIDE_LENGTH) graphics.drawLine(x + squareSideLength - 1, groupYOffset, x + squareSideLength - 1, groupYOffset + groupSideLength - 1);
+					for (int i = 0; i < cuttingLineWidth; i++) graphics.drawLine(x + squareSideLength + i, groupYOffset - cuttingLineWidth, x + squareSideLength + i, groupYOffset + groupSideLength - cuttingLineWidth - 1);
 			
 				}
 
@@ -157,8 +153,8 @@ public class BCodeMaker
 						if (data <= ID_START + ID_INCREMENT * (ID_COUNT - 1))
 						{
 							BufferedImage label = Writer.create(data % BCode.UNIQUE_ID_COUNT, LABEL_TYPE, labelZoom, LABEL_INVERT);
-							int x = groupXOffset + squareColumn * (squareSideLength + squareSpacerWidth) + cuttingLineWidth + labelExtraMargin;
-							int y = groupYOffset + squareRow * (squareSideLength + squareSpacerWidth) + cuttingLineWidth + labelExtraMargin;
+							int x = groupXOffset + squareColumn * (squareSideLength + squareSpacerWidth + cuttingLineWidth) + labelExtraMargin;
+							int y = groupYOffset + squareRow * (squareSideLength + squareSpacerWidth + cuttingLineWidth) + labelExtraMargin;
 							graphics.drawImage(label, x, y, null);
 							data += ID_INCREMENT;
 						}
@@ -239,9 +235,10 @@ public class BCodeMaker
 		// perform some calculations
 		int cuttingLineExcessLength = Math.round(toPixels(WHISKER_LENGTH));
 		int labelWidthOffset = ((LABEL_TYPE == Writer.TYPE_SOLID) || (LABEL_TYPE == Writer.TYPE_CORNERS)) ? 0 : -1;
-		int squareSideLength = Writer.getLabelSideLength(LABEL_TYPE, labelZoom) + 2 * (CUTTING_LINE_WIDTH) + 2 * labelExtraMargin + labelWidthOffset;
+		int squareSideLength = Writer.getLabelSideLength(LABEL_TYPE, labelZoom) + 2 * labelExtraMargin + labelWidthOffset;
 		int squareSpacerWidth = Math.round(toPixels(LABEL_SPACER_WIDTH));
-		int groupSideLength = GROUP_SIDE_LENGTH * squareSideLength + (GROUP_SIDE_LENGTH - 1) * squareSpacerWidth;
+		int groupSideLength = GROUP_SIDE_LENGTH * (squareSideLength + CUTTING_LINE_WIDTH) + (GROUP_SIDE_LENGTH - 1) * squareSpacerWidth + CUTTING_LINE_WIDTH;
+		
 		int groupSpacerWidth = Math.round(toPixels(GROUP_SPACER_WIDTH / 2)) * 2;
 		int width = GROUP_X_COUNT * groupSideLength + (GROUP_X_COUNT + 1) * groupSpacerWidth; 
 		int height = GROUP_Y_COUNT * groupSideLength + (GROUP_Y_COUNT + 1) * groupSpacerWidth;		
