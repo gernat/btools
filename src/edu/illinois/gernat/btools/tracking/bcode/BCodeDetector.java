@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017, 2018 University of Illinois Board of Trustees.
+ * Copyright (C) 2017, 2018, 2019 University of Illinois Board of Trustees.
  *
  * This file is part of bTools.
  *
@@ -43,11 +43,6 @@ import edu.illinois.gernat.btools.common.io.record.RecordReader;
 import edu.illinois.gernat.btools.common.io.record.RecordWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
 
-/**
- * @version 0.14.0
- * @since 0.12.0
- * @author Tim Gernat
- */
 public class BCodeDetector
 {
 
@@ -137,8 +132,8 @@ public class BCodeDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("bCode Detector (bTools) 0.13.0");
-		System.out.println("Copyright (C) 2017, 2018 University of Illinois Board of Trustees");
+		System.out.println("bCode Detector (bTools) 0.13.1");
+		System.out.println("Copyright (C) 2017, 2018, 2019 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
