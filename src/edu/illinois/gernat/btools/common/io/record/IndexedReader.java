@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 University of Illinois Board of Trustees.
+ * Copyright (C) 2017, 2020 University of Illinois Board of Trustees.
  *
  * This file is part of bTools.
  *
