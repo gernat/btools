@@ -64,6 +64,16 @@ public class TokenWriter
 		this.delimiter = delimiter;
 	}
 
+	public void writeTokens(Tokenizable tokenizable)
+	{
+		writeTokens(tokenizable.toTokens());
+	}
+
+    public void writeTokens(String[] tokens)
+	{
+    	writeTokens((Object[])tokens);
+	}
+    
 	public void writeTokens(Object... tokens)
 	{
 		for (int i = 0; i < tokens.length; i++) 
@@ -72,11 +82,6 @@ public class TokenWriter
 			if (i < tokens.length - 1) writer.print(delimiter);
 		}
 		writer.println();
-	}
-
-	public void writeTokens(Tokenizable tokenizable)
-	{
-		writeTokens(tokenizable.toTokens());
 	}
 	
 	public void close() 

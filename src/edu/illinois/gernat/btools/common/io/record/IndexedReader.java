@@ -101,6 +101,13 @@ public class IndexedReader
 		else return readThis(previousTimestamp);
 	}
 
+	public Record readPrevious(long timestamp, int id) throws IOException
+	{
+		Long previousTimestamp = previousIndex.get(timestamp);
+		if (previousTimestamp == null) return null;
+		else return readRecord(previousTimestamp, id);
+	}
+
 	public List<Record> readThis(long timestamp) throws IOException
 	{
 		
@@ -143,12 +150,18 @@ public class IndexedReader
 		if (nextTimestamp == null) return null;
 		else return readThis(nextTimestamp);		
 	}
+
+	public Record readNext(long timestamp, int id) throws IOException
+	{
+		Long nextTimestamp = nextIndex.get(timestamp);
+		if (nextTimestamp == null) return null;
+		else return readRecord(nextTimestamp, id);		
+	}
 	
 	public Record readRecord(long timestamp, int id) throws IOException
 	{
 		List<Record> records = readThis(timestamp);
-		for (Record record : records) 
-			if (record.id == id) return record;
+		for (Record record : records) if (record.id == id) return record;
 		return null;//FIXME
 //		Record tmp = null;
 //		for (Record record : records) 

@@ -26,55 +26,88 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
+
+import org.bytedeco.ffmpeg.global.avutil;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber.Exception;
+import org.bytedeco.javacv.Java2DFrameConverter;
 
 import com.google.zxing.NotFoundException;
 
 import edu.illinois.gernat.btools.common.image.Images;
 import edu.illinois.gernat.btools.common.io.record.Record;
-import edu.illinois.gernat.btools.common.io.record.RecordReader;
 import edu.illinois.gernat.btools.common.io.record.RecordWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
 
 public class BCodeDetector
 {
-
-	public static void processImage(String[] args) throws NotFoundException, IOException, ParseException
+	
+	private static LinkedHashMap<Long, List<MetaCode>> processImage(String inputFilename) throws IOException, ParseException
 	{
+		BufferedImage image = ImageIO.read(new File(inputFilename));
+		List<MetaCode> bCodes = detectBCodesIn(image);
+		long timestamp = Images.getTimestampFromFilename(inputFilename);
+		LinkedHashMap<Long, List<MetaCode>> result = new LinkedHashMap<>();
+		result.put(timestamp, bCodes);
+		return result;
+	}
+
+	private static LinkedHashMap<Long, List<MetaCode>> processVideo(String inputFilename, int frameRate) throws ParseException, IOException
+	{	
 		
-		// set parameters
-		Parameters parameters = Parameters.INSTANCE;
-		parameters.initialize(args);
-		Preprocessor.sharpeningSigma = parameters.getDouble("sharpening.sigma"); 
-		Preprocessor.sharpeningAmount = parameters.getDouble("sharpening.amount");
-		Preprocessor.scalingFactor = (float) parameters.getDouble("scaling.factor");
-		Reader.minBlackThreshold = parameters.getInteger("min.intensity.threshold");
-		Reader.maxBlackThreshold = parameters.getInteger("max.intensity.threshold");
-		Reader.thresholdStepSize = parameters.getInteger("intensity.step.size");
-		Detector.minTemplateConservation = parameters.getDouble("min.template.conservation");
-		Detector.checkMargin = parameters.getBoolean("conserve.margin");
-		String imageFilename = parameters.getString("image.filename");
-		String detectedBcodesFilename = parameters.getString("detected.bCodes.filename");
+		// check parameters
+		if (frameRate == -1) throw new IllegalStateException();
 		
-		// delete result file
-		File file = new File(detectedBcodesFilename);
-		if (file.exists()) file.delete();
+		// initialize frame grabber and converter
+		avutil.av_log_set_level(avutil.AV_LOG_QUIET);
+		FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(inputFilename);
+		grabber.setVideoOption("threads", "1");		
+		grabber.start();
+		Java2DFrameConverter converter = new Java2DFrameConverter();
 		
-		// read image
-		BufferedImage image = ImageIO.read(new File(imageFilename));
-		if (image == null) 
+		// initialize bCode detection loop
+		LinkedHashMap<Long, List<MetaCode>> result = new LinkedHashMap<>();
+		long timestamp = Images.getTimestampFromFilename(inputFilename);
+		int frameNumber = 0;
+		Frame frame = grabber.grab();				
+
+		// loop over and process video frames
+		while (frame != null)
 		{
-			System.err.println("image processor: cannot read image file '" + imageFilename + "'.");
-			return;
+			
+			// convert frame
+			BufferedImage image = converter.convert(frame);
+			
+			// detect bCodes
+			List<MetaCode> bCodes = detectBCodesIn(image);
+			result.put(timestamp + Math.round(frameNumber * 1000d / frameRate), bCodes);
+			
+			// load next frame
+			frame = grabber.grab();
+			frameNumber++;
+	
 		}
 		
+		// dispose of frame grabber
+		grabber.stop();
+	    grabber.close();
+		grabber.release();
+		
+		// done
+		return result;
+		
+	}
+	
+	private static List<MetaCode> detectBCodesIn(BufferedImage image)
+	{
+
 		// preprocess image
 		image = Preprocessor.preprocess(image);
 		
@@ -95,39 +128,9 @@ public class BCodeDetector
 			}
 		}
 		
-		// get image timestamp from filename
-		long timestamp = Images.getTimestampFromFilename(imageFilename);
+		// done
+		return metaIDs;
 		
-		// write ID data to file 
-		List<Record> records = new ArrayList<Record>();
-		String tmpFilename = imageFilename.substring(0, imageFilename.length() - 4) + ".tmp";
-		RecordWriter writer = new RecordWriter(tmpFilename);
-		for (MetaCode metaID : metaIDs) 
-		{
-			Record record = new Record(timestamp, metaID.data, metaID.nw, metaID.ne, metaID.sw, metaID.support, metaID.errorCorrectionCount);
-			record.roundPatternCoordinates();
-			records.add(record);
-			writer.writeRecord(record);
-		}
-		writer.close();
-
-		// verify that written ID data is equal to what got decoded from the image
-		int count = 0;
-		RecordReader reader = new RecordReader(tmpFilename);
-		while (reader.hasMoreRecords())
-		{
-			Record record = reader.readRecord();
-			if (record.equals(records.get(count))) count++;
-			else break;
-		}
-		reader.close();
-		
-		// delete temporary file if written ID data is different; otherwise
-		// rename to result file name
-		file = new File(tmpFilename);
-		if (count != records.size()) Files.delete(file.toPath());
-		else file.renameTo(new File(detectedBcodesFilename));
-			
 	}
 
 	private static void showVersionAndCopyright() 
@@ -147,11 +150,9 @@ public class BCodeDetector
 		System.out.println("Parameters:");
 		System.out.println("- conserve.margin           whether the bCode border is considered to be part");
 		System.out.println("                            of the bCode template");
-		System.out.println("- detected.bCodes.filename  output file containing the bCode detection results.");
-		System.out.println("- image.filename            input image file");
-		System.out.println("- image.list.filename       plain text file listing on each line one input");
-		System.out.println("                            image file");
-		System.out.println("- scaling.factor       		factor for image scaling prior to detecting bCodes");
+		System.out.println("- frame.rate           		frame frate of any videos to be processed");
+		System.out.println("- scaling.factor            factor for image scaling prior to detecting bCodes");
+		System.out.println("- input.file            	the input image, video, or plain text file");
 		System.out.println("- intensity.step.size       increment when going from the lowest to the highest");
 		System.out.println("                            intensity threshold");
 		System.out.println("- max.intensity.threshold   highest intensity threshold for converting to a");
@@ -166,17 +167,18 @@ public class BCodeDetector
 		System.out.println("- show.credits              set to \"true\" or 1 to display credits and exit");
 		System.out.println();
 		System.out.println("Notes:");
-		System.out.println("Input image filenames need to be a valid date in the format");
-		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.");
+		System.out.println("If the input.file is a plain text file, this file must list one image or.");
+		System.out.println("video file per line");
+		System.out.println("");
+		System.out.println("Image and video file names need to be a valid date in the format");
+		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.File name and extension must be separated by a dot.");
+		System.out.println("Output file names are constructed by replacing the input image file");
+		System.out.println("extension with 'txt'.");
 		System.out.println();
-		System.out.println("Parameters image.filename and detected.bCodes.filename cannot be specified");
-		System.out.println("in conjunction with the image.list.filename parameter.");
-		System.out.println();
-		System.out.println("If the image.list.filename parameter is given, bCode detection output file names");
-		System.out.println("are constructed by replacing the input image file extension with 'txt'. Input");
-		System.out.println("image file name and extension must be separated by a dot.");
+		System.out.println("When processing videos, a constant frame rate if assumed when calculating");
+		System.out.println("timestamps from the date encoded by the video file name and the frame number.");
 	}
-
+	 
 	private static void showCredits() throws IOException 
 	{
 		showVersionAndCopyright();
@@ -188,8 +190,7 @@ public class BCodeDetector
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		while (reader.ready()) System.out.println(reader.readLine());
 		reader.close();
-		inputStream.close();
-		System.exit(1);
+		inputStream.close();		
 	}
 
 	public static void main(String[] args) throws NotFoundException, IOException, ParseException
@@ -205,54 +206,93 @@ public class BCodeDetector
 			System.exit(1);
 		}
 
-		// construct constant part of contact predictor argument array
-		String[] arguments = new String[args.length + 2];
-		System.arraycopy(args, 0, arguments, 0, args.length);
-		
 		// get arguments
 		Parameters parameters = Parameters.INSTANCE;
 		parameters.initialize(args);
-		if ((parameters.exists("show.credits")) && (parameters.getBoolean("show.credits"))) showCredits();
 		
-		// check parameters
-		if (parameters.exists("image.list.filename")) 
+		// if requested, show credits and exit 
+		if ((parameters.exists("show.credits")) && (parameters.getBoolean("show.credits"))) 
 		{
-			if (parameters.exists("image.filename")) throw new IllegalStateException("image.list.filename cannot be specified together with image.filename.");
-			if (parameters.exists("detected.bCodes.filename")) throw new IllegalStateException("image.list.filename cannot be specified together with detected.bCodes.filename.");
-		}
-		
-		// create map from input file to output file
-		HashMap<String, String> ioMap = new HashMap<>();
-		if (!parameters.exists("image.list.filename")) ioMap.put(parameters.getString("image.filename"), parameters.getString("detected.bCodes.filename"));
-		else
-		{
-			String imageListFilename = parameters.getString("image.list.filename");
-			BufferedReader reader = new BufferedReader(new FileReader(imageListFilename));
-			while (reader.ready())
-			{
-				String imageFileName = reader.readLine();
-				String resultFileName = imageFileName.substring(0, imageFileName.lastIndexOf(".")) + ".txt";
-				ioMap.put(imageFileName, resultFileName);
-			}
-			reader.close();
+			showCredits();
+			System.exit(1);
 		}
 
-		// process each input image
-		for (Entry<String, String> entry : ioMap.entrySet()) 
+		// set image processing parameters
+		Preprocessor.sharpeningSigma = parameters.getDouble("sharpening.sigma"); 
+		Preprocessor.sharpeningAmount = parameters.getDouble("sharpening.amount");
+		Preprocessor.scalingFactor = (float) parameters.getDouble("scaling.factor");
+		Reader.minBlackThreshold = parameters.getInteger("min.intensity.threshold");
+		Reader.maxBlackThreshold = parameters.getInteger("max.intensity.threshold");
+		Reader.thresholdStepSize = parameters.getInteger("intensity.step.size");
+		Detector.minTemplateConservation = parameters.getDouble("min.template.conservation");
+		Detector.checkMargin = parameters.getBoolean("conserve.margin");
+		int frameRate = parameters.exists("frame.rate") ? parameters.getInteger("frame.rate") : -1;
+		
+		// map input files to output files
+		HashMap<String, String> ioMap = mapInputToOutput(parameters.getString("input.file"));
+
+		// process each input file
+		processInputFiles(ioMap, frameRate);
+		
+	}
+
+	private static void processInputFiles(HashMap<String, String> ioMap, int frameRate) throws IOException, ParseException
+	{
+		for (String inputFilename : ioMap.keySet())
 		{
-			arguments[arguments.length - 2] = "image.filename=" + entry.getKey();
-			arguments[arguments.length - 1] = "detected.bCodes.filename=" + entry.getValue();			
+
+			// delete output file, if it exists
+			String outputFilename = ioMap.get(inputFilename);
+			File outputFile = new File(outputFilename);
+			if (outputFile.exists()) outputFile.delete();
+
+			// detect bCodes in input file
+			LinkedHashMap<Long, List<MetaCode>> bCodeDetectionResults = null;
 			try
 			{
-				processImage(arguments);
+				if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png")) bCodeDetectionResults = processImage(inputFilename);
+				else if (inputFilename.endsWith(".h264")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
-				System.err.println("Caused by file: " + entry.getKey());
+				System.err.println("Caused by file: " + inputFilename);
 			}
-		}
+			
+			// write bCode detections to file 
+			RecordWriter writer = new RecordWriter(outputFilename);
+			for (Long timestamp : bCodeDetectionResults.keySet())
+			{
+				List<MetaCode> bCodes = bCodeDetectionResults.get(timestamp);
+				for (MetaCode metaCode : bCodes)
+				{
+					Record record = new Record(timestamp, metaCode.data, metaCode.nw, metaCode.ne, metaCode.sw, metaCode.support, metaCode.errorCorrectionCount);
+					record.roundPatternCoordinates();
+					writer.writeRecord(record);	
+				}
+			}
+			writer.close();
 
+		}		
+	}
+
+	private static HashMap<String, String> mapInputToOutput(String inputFilename) throws IOException
+	{
+		HashMap<String, String> ioMap = new HashMap<>(); 
+		if (!inputFilename.endsWith(".txt")) queueInputFile(ioMap, inputFilename);
+		else
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(inputFilename));
+			while (reader.ready()) queueInputFile(ioMap, reader.readLine());
+			reader.close();	
+		}
+		return ioMap;
+	}
+
+	private static void queueInputFile(HashMap<String, String> ioMap, String inputFilename)
+	{
+		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
+		else throw new IllegalStateException("bCode detector: unsupported input file extension");
 	}
 	
 }

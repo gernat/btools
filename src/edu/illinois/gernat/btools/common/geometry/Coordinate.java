@@ -139,4 +139,9 @@ implements Cloneable
 		return "(" + x + "," + y + ")";
 	}
 
+	public Point toPoint() 
+	{
+		return new Point(Math.round(x), Math.round(y));
+	}
+
 }

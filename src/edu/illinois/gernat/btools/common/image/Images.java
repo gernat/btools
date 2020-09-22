@@ -26,6 +26,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -81,8 +83,10 @@ public class Images
 	public static long getTimestampFromFilename(String filename) throws ParseException
 	{
 		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");  
-		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));  
-		return formatter.parse(filename.substring(filename.length() - 27, filename.length() - 4)).getTime();  
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT")); 
+		Path path = Paths.get(filename);
+		filename = path.getFileName().toString();
+		return formatter.parse(filename.substring(0, filename.lastIndexOf("."))).getTime();  
 	}
 
 	public static long getTimestampFromFile(File file) throws ParseException
