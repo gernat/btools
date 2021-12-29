@@ -22,6 +22,7 @@ package edu.illinois.gernat.btools.common.io.record;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -74,9 +75,36 @@ public class Indexer
 		System.out.println("Index bCode detection results.");
 		System.out.println();  		
 		System.out.println("Parameters:");  		
-		System.out.println("- eol.byte.count length of the sequence of characters signifying the end of a");
-		System.out.println("                 line of text in the file to be indexed");
-		System.out.println("- file           the file to be indexed");
+		System.out.println("- file the file to be indexed");
+	}
+	
+	public static int determineLineSeparatorLength(String file) throws IOException 
+	{
+	    char c;
+	    FileInputStream fis = new FileInputStream(file);
+	    try 
+	    {
+	        while (fis.available() > 0) 
+	        {
+	            c = (char) fis.read();
+	            if (c == '\n') return 1;
+	            if (c == '\r') 
+	            {
+	                if (fis.available() > 0) 
+	                {
+	                    c = (char) fis.read();
+	                    if (c == '\n') return 2;
+	                    else return 1;
+	                }
+	                return 1;
+	            }
+	        }
+	    } 
+	    finally 
+	    {
+	        if (fis!=null) fis.close();
+	    }
+	    return -1;
 	}
 	
 	public static void main(String[] args) throws NumberFormatException, IOException
@@ -92,11 +120,16 @@ public class Indexer
 			System.exit(1);
 		}
 		
-		// index file
+		// get arguments
 		Parameters parameters = Parameters.INSTANCE;
-		parameters.initialize(args);
-		int eolByteCount = parameters.getInteger("eol.byte.count");
+		parameters.initialize(args);		
 		String file = parameters.getString("file");
+		
+		// determine line separator size
+		int eolByteCount = determineLineSeparatorLength(file);
+		if (eolByteCount == -1) throw new IllegalStateException("Could not determine line separator size.");
+			
+		// index file
 		Indexer.index(file, eolByteCount); 
 		
 	}
