@@ -252,7 +252,7 @@ public class BCodeDetector
 			try
 			{
 				if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png")) bCodeDetectionResults = processImage(inputFilename);
-				else if (inputFilename.endsWith(".h264")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
+				else if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
 			}
 			catch (Exception e)
 			{
@@ -292,7 +292,7 @@ public class BCodeDetector
 
 	private static void queueInputFile(HashMap<String, String> ioMap, String inputFilename)
 	{
-		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
+		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
 		else throw new IllegalStateException("bCode detector: unsupported input file extension");
 	}
 	
