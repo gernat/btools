@@ -28,6 +28,18 @@ import edu.illinois.gernat.btools.common.parameters.Parameters;
 public class Converter
 {
 
+	public static final int FIELD_TIMESTAMP = 0;
+	
+	public static final int FIELD_X = 1;
+	
+	public static final int FIELD_Y = 2;
+	
+	public static final int FIELD_DX = 3;
+	
+	public static final int FIELD_DY = 4;
+	
+	public static final int FIELD_BEE_ID = 5;
+	
 	private static void toPlainText(String sourceFileName, String destinationFileName) throws IOException
 	{
 		RecordReader reader = new RecordReader(sourceFileName);
