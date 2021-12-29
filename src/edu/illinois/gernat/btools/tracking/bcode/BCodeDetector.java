@@ -145,15 +145,15 @@ public class BCodeDetector
 
 	private static void showUsageInformation() 
 	{
-		System.out.println("Usage: java -jar batch_read_bcodes.jar PARAMETER=VALUE...");
-		System.out.println("Detect bCodes in images.");
+		System.out.println("Usage: java -jar bcode_detector.jar PARAMETER=VALUE...");
+		System.out.println("Detect bCodes in images or videos.");
 		System.out.println();  		
 		System.out.println("Parameters:");
 		System.out.println("- conserve.margin           whether the bCode border is considered to be part");
 		System.out.println("                            of the bCode template");
-		System.out.println("- frame.rate           		frame frate of any videos to be processed");
+		System.out.println("- frame.rate           	    frame rate of any videos to be processed");
 		System.out.println("- scaling.factor            factor for image scaling prior to detecting bCodes");
-		System.out.println("- input.file            	the input image, video, or plain text file");
+		System.out.println("- input.file                the input image, video, or plain text file");
 		System.out.println("- intensity.step.size       increment when going from the lowest to the highest");
 		System.out.println("                            intensity threshold");
 		System.out.println("- max.intensity.threshold   highest intensity threshold for converting to a");
@@ -172,7 +172,7 @@ public class BCodeDetector
 		System.out.println("video file per line");
 		System.out.println("");
 		System.out.println("Image and video file names need to be a valid date in the format");
-		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.File name and extension must be separated by a dot.");
+		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS. File name and extension must be separated by a dot.");
 		System.out.println("Output file names are constructed by replacing the input image file");
 		System.out.println("extension with 'txt'.");
 		System.out.println();

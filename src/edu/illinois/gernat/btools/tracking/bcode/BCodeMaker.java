@@ -179,7 +179,7 @@ public class BCodeMaker
 
 	private static void showUsageInformation() 
 	{
-		System.out.println("Usage: java -jar make_bcodes.jar PARAMETER=VALUE...");
+		System.out.println("Usage: java -jar bcode_maker.jar PARAMETER=VALUE...");
 		System.out.println("Draw 2048 unique bCodes.");
 		System.out.println();  		
 		System.out.println("Parameters:");

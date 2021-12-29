@@ -245,16 +245,16 @@ public class TrophallaxisDetector
 
 	private static void showUsageInformation() 
 	{
-		System.out.println("Usage: java -jar detect_trophallaxis.jar PARAMETER=VALUE...");
-		System.out.println("Detect trophllaxis between bees in images.");
+		System.out.println("Usage: java -jar trophallaxis_detector.jar PARAMETER=VALUE...");
+		System.out.println("Detect trophllaxis between honey bees.");
 		System.out.println();  		
 		System.out.println("Parameters:");
 		System.out.println("- contrast.threshold        contrast threshold used during local thresholding");
 		System.out.println("- distance.label.head       average distance between the center of a bee's");
 		System.out.println("                            bCode and the center of her head");
-		System.out.println("- leveling.threshold        maximum allowed intensity of any pixel in the");
-		System.out.println("                            image. Pixels with a higher intensity will be set");
-		System.out.println("                            to this threshold");
+		System.out.println("- filtered.data.file        file containing the bCode detection results for");
+		System.out.println("                            the file named by the image.filename parameter.");
+		System.out.println("                            Must be sorted by timestamp column");
 		System.out.println("- geometry.max.angle.sum    maximum sum of the angles between a line drawn");
 		System.out.println("                            between the geometrically predicted centers of the");
 		System.out.println("                            head of two potential interaction partners and the");
@@ -268,6 +268,9 @@ public class TrophallaxisDetector
 		System.out.println("- image.filename            input image file");
 		System.out.println("- image.list.filename       plain text file listing on each line one input");
 		System.out.println("                            image file.");
+		System.out.println("- leveling.threshold        maximum allowed intensity of any pixel in the");
+		System.out.println("                            image. Pixels with a higher intensity will be set");
+		System.out.println("                            to this threshold");
 		System.out.println("- max.path.thickness        maximum thickness of a path connecting the heads");
 		System.out.println("                            of putative interaction partners");
 		System.out.println("- max.thick.segment.length  maximum length of the segments that may be thicker");
@@ -291,9 +294,6 @@ public class TrophallaxisDetector
 		System.out.println("- vision.min.distance       minimum distance between the");
 		System.out.println("                            computer-vision-predicted centers of the heads of");
 		System.out.println("                            two potential interaction partners");
-		System.out.println("- filtered.data.file        file containing the bCode detection results for");
-		System.out.println("                            the file named by the image.filename parameter.");
-		System.out.println("                            Must be sorted by timestamp column");
 		System.out.println();
 		System.out.println("Notes:");
 		System.out.println("Input image filenames need to be a valid date in the format");

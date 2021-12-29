@@ -65,7 +65,7 @@ public class Converter
 	private static void showUsageInformation() 
 	{
 		System.out.println("Usage: java -jar converter.jar PARAMETER=VALUE...");
-		System.out.println("Convert raw bCode detection results to human-readable plain text.");
+		System.out.println("Convert raw bCode detections to human-readable plain text.");
 		System.out.println();  		
 		System.out.println("Parameters:");  		
 		System.out.println("- human.readable.file the human-readable output file");
