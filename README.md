@@ -14,7 +14,8 @@ If you want to experiment with the code, choose a branch and download or clone t
 `BCodeDetector.java` - detects bCodes in digital images.  
 `Converter.java` - converts raw bCode detection results to a more useful format.  
 `Indexer.java` - indexes raw bCode detection results.  
-`TrophallaxisDetector.java` - detects liquid food exchange among bees.
+`TrophallaxisDetector.java` - detects liquid food exchange among honey bees.  
+`MovementDetector.java` - detects bCode movement.
 
 # Documentation
 
@@ -22,7 +23,7 @@ Brief documentation and a tutorial are available in the [wiki](https://github.co
 
 # Versions
 
-bTools uses [Semantic Versioning](http://www.semver.org). The [development branch](https://github.com/gernat/btools/tree/development) is the latest version of bTools, while the [master branch](https://github.com/gernat/btools/tree/master) contains the latest stable release. For information about each release, check out the [Changelog](https://github.com/gernat/btools/blob/development/CHANGELOG).
+bTools uses [Semantic Versioning](http://www.semver.org). The [development branch](https://github.com/gernat/btools/tree/development) is the latest version of bTools, while the [master branch](https://github.com/gernat/btools/tree/master) contains the latest stable release. For information about each release, check out the [Changelog](https://github.com/gernat/btools/blob/master/CHANGELOG).
 
 # Bug reports
 
@@ -34,7 +35,7 @@ Please consider contributing your improvements and additions by sending a [pull 
 
 # License
 
-This software is distributed under the [GNU Affero General Public License v3 license](https://github.com/gernat/btools/blob/development/LICENSE) and uses third party software that is distributed under its [own terms](https://github.com/gernat/btools/blob/development/LICENSE-3RD-PARTY). 
+This software is distributed under the [GNU Affero General Public License v3 license](https://github.com/gernat/btools/blob/master/LICENSE) and uses third party software that is distributed under its [own terms](https://github.com/gernat/btools/blob/master/res/LICENSE-3RD-PARTY). 
 
 # Contact
 
