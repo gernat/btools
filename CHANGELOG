@@ -1,3 +1,12 @@
+0.15.0
+
+- Adds a movement detector.
+- Adds automatic line separator identification to indexer.
+- Adds MP4 support to bCode detector.
+- Fixes usage texts.
+- Fixes display of 3rd party licenses.
+- Updates README.
+
 0.14.0
 
 - Adds video processing capability to bCode detector.
