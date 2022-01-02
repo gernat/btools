@@ -39,10 +39,6 @@ public class MovementDetector
 		// open bCode detection file
 		RecordReader bCodeReader = new RecordReader(bCodeDetectionFile);
 
-		// write result file header
-		TokenWriter movementWriter = new TokenWriter(movementFile, ",");
-		movementWriter.writeTokens("timestamp", "id", "distance_traveled");
-
 		// initialize variables
 		int expectedTimeBetweenFrames = (int) (1.0 / frameRate * 1000);
 		int maxTimeCreep = expectedTimeBetweenFrames / 10;
@@ -50,6 +46,7 @@ public class MovementDetector
 		long[] lastTime = new long[BCode.UNIQUE_ID_COUNT];
 		
 		// process bCode detection file
+		TokenWriter movementWriter = new TokenWriter(movementFile, ",");
 		while (bCodeReader.hasMoreRecords())
 		{
 			
