@@ -227,11 +227,21 @@ public class BCodeDetector
 		Reader.thresholdStepSize = parameters.getInteger("intensity.step.size");
 		Detector.minTemplateConservation = parameters.getDouble("min.template.conservation");
 		Detector.checkMargin = parameters.getBoolean("conserve.margin");
-		int frameRate = parameters.exists("frame.rate") ? parameters.getInteger("frame.rate") : -1;
 		
 		// map input files to output files
 		HashMap<String, String> ioMap = mapInputToOutput(parameters.getString("input.file"));
 
+		// set frame rate parameter, if necessary
+		int frameRate = -1;
+		for (String inputFilename : ioMap.keySet()) 
+		{
+			if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4"))
+			{
+				frameRate = parameters.getInteger("frame.rate");
+				break;
+			}
+		}
+		
 		// process each input file
 		processInputFiles(ioMap, frameRate);
 		
