@@ -1,12 +1,12 @@
 # Overview
 
-bTools is a set of programs for identifying and tracking insects in image sequences with the help of a tiny matrix barcode, and for detecting mouth-to-mouth exchange of liquid food among honey bees. 
+bTools is a set of programs for identifying and tracking insects in image sequences with the help of a tiny matrix barcode, and for detecting movement as well as mouth-to-mouth exchange of liquid food among honey bees. 
 
 # Getting started
 
-If you want executable binaries, download them from our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions in the [wiki](https://github.com/gernat/btools/wiki).
+If you want executable binaries, please download them from our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions in the [wiki](https://github.com/gernat/btools/wiki).
 
-If you want to experiment with the code, choose a branch and download or clone the repository. Import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go.
+If you want to experiment with the code, please choose a branch and download or clone the repository. Next, import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go.
 
 ## Main classes
 
@@ -23,7 +23,7 @@ Brief documentation and a tutorial are available in the [wiki](https://github.co
 
 # Versions
 
-bTools uses [Semantic Versioning](http://www.semver.org). The [development branch](https://github.com/gernat/btools/tree/development) is the latest version of bTools, while the [master branch](https://github.com/gernat/btools/tree/master) contains the latest stable release. For information about each release, check out the [Changelog](https://github.com/gernat/btools/blob/master/CHANGELOG).
+bTools uses [Semantic Versioning](http://www.semver.org). The [development branch](https://github.com/gernat/btools/tree/development) is the latest version of bTools, while the [master branch](https://github.com/gernat/btools/tree/master) contains the latest stable release. For information about each release, please check out the [Changelog](https://github.com/gernat/btools/blob/master/CHANGELOG).
 
 # Bug reports
 
