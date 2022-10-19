@@ -126,7 +126,10 @@ public enum Parameters
 
 	public int getInteger(String parameter)
 	{
-		return Integer.parseInt(getArgument(parameter));
+		String argument = getArgument(parameter);
+		if (argument.equals("-Infinity")) return Integer.MIN_VALUE;
+		else if (argument.equals("+Infinity")) return Integer.MAX_VALUE;
+		else return Integer.parseInt(argument);
 	}
 	
 	public boolean getBoolean(String parameter)
@@ -136,14 +139,21 @@ public enum Parameters
 
 	public double getDouble(String parameter)
 	{
-		return Double.parseDouble(getArgument(parameter));
+		String argument = getArgument(parameter);
+		if (argument.equals("-Infinity")) return Double.MIN_VALUE;
+		else if (argument.equals("+Infinity")) return Double.MAX_VALUE;
+		return Double.parseDouble(argument);
 	}
 
 	public long getLong(String parameter)
 	{
-		return Long.parseLong(getArgument(parameter));
+		String argument = getArgument(parameter);
+		if (argument.equals("-Infinity")) return Long.MIN_VALUE;
+		else if (argument.equals("+Infinity")) return Long.MAX_VALUE;
+		return Long.parseLong(argument);
 	}
 	
+	//BUG: this is unable to handle negative integers in list 
 	public List<Integer> getIntegerList(String parameter)
 	{
 		List<Integer> list = new ArrayList<Integer>();
