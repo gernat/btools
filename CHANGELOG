@@ -2,6 +2,7 @@
 
 - Removes header from movement detection files.
 - Adds angular displacement reporting to movement detector.
+- Adds reporting thresholds to movement detector.
 
 0.15.0
 

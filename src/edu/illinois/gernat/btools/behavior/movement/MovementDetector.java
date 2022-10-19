@@ -34,7 +34,7 @@ import edu.illinois.gernat.btools.tracking.bcode.BCode;
 public class MovementDetector
 {
 
-	private static void detectMovement(String bCodeDetectionFile, String movementFile, int frameRate, float mmPerPixel) throws IOException
+	private static void detectMovement(String bCodeDetectionFile, String movementFile, int frameRate, double minLinearDisplacement, double maxLinearDisplacement, double minAngularDisplacement, double maxAngularDisplacement, double mmPerPixel) throws IOException
 	{
 
 		// open bCode detection file
@@ -69,8 +69,9 @@ public class MovementDetector
 					float distance = lastPosition[record.id].distanceTo(record.center);
 					float angle = lastOrientation[record.id].angleBetween(record.orientation);
 					
-					// write movement to file
-					movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
+					// write movement to file if the linear or angular 
+					// displacement is within the respective thresholds
+					if (((distance >= minLinearDisplacement) && (distance <= maxLinearDisplacement)) || ((Math.abs(angle) >= minAngularDisplacement) && (Math.abs(angle) <= maxAngularDisplacement))) movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
 					
 				}
 				
@@ -105,11 +106,16 @@ public class MovementDetector
 		System.out.println("Detect movement.");
 		System.out.println();  		
 		System.out.println("Parameters:");
-		System.out.println("- filtered.data.file file containing the bCode detection results. Must be sorted");
-		System.out.println("                     by timestamp column");
-		System.out.println("- frame.rate         frame rate at which bCodes were recorded");
-		System.out.println("- mm.per.pixel       real-world spatial extend represented by a single pixel");
-		System.out.println("- movement.file      output file containing the movement detections");
+		System.out.println("- filtered.data.file       file containing the bCode detection results. Must be");		
+		System.out.println("                           sorted by timestamp column");
+		System.out.println("- frame.rate               frame rate at which bCodes were recorded");
+		System.out.println("- max.angular.displacement abolute maximum angular displacement to be reported");
+		System.out.println("- max.linear.displacement  maximum linear displacement to be reported");
+		System.out.println("- min.angular.displacement abolute minimum angular displacement to be reported");
+		System.out.println("- min.linear.displacement  minimum linear displacement to be reported");
+		System.out.println("- mm.per.pixel             real-world spatial extend represented by a single");
+		System.out.println("                           pixel");
+		System.out.println("- movement.file            output file containing the movement detections");
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException, ParseException
@@ -130,11 +136,22 @@ public class MovementDetector
 		parameters.initialize(args);
 		String filteredDataFile = parameters.getString("filtered.data.file");
 		int frameRate = parameters.getInteger("frame.rate");
+		double maxAngularDisplacement = parameters.getDouble("max.angular.displacement"); 
+		double maxLinearDisplacement = parameters.getDouble("max.linear.displacement");
+		double minAngularDisplacement = parameters.getDouble("min.angular.displacement");
+		double minLinearDisplacement = parameters.getDouble("min.linear.displacement");
 		double mmPerPixel = parameters.getDouble("mm.per.pixel");
 		String movementFile = parameters.getString("movement.file");
 		
+		// convert linear displacement thresholds to pixels and angular 
+		// displacement thresholds to radians
+		minLinearDisplacement /= mmPerPixel;
+		maxLinearDisplacement /= mmPerPixel;
+		minAngularDisplacement = minAngularDisplacement / 180 * Math.PI;
+		maxAngularDisplacement = maxAngularDisplacement / 180 * Math.PI;
+		
 		// detect movement
-		detectMovement(filteredDataFile, movementFile, frameRate, (float) mmPerPixel);
+		detectMovement(filteredDataFile, movementFile, frameRate, minLinearDisplacement, maxLinearDisplacement, minAngularDisplacement, maxAngularDisplacement, mmPerPixel);
 
 	}
 
