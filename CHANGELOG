@@ -1,6 +1,7 @@
 0.15.1
 
 - Removes header from movement detection files.
+- Adds angular displacement reporting to movement detector.
 
 0.15.0
 

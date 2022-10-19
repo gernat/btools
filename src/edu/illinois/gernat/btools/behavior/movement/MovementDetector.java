@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import edu.illinois.gernat.btools.common.geometry.Coordinate;
+import edu.illinois.gernat.btools.common.geometry.Vector;
 import edu.illinois.gernat.btools.common.io.record.Record;
 import edu.illinois.gernat.btools.common.io.record.RecordReader;
 import edu.illinois.gernat.btools.common.io.token.TokenWriter;
@@ -43,6 +44,7 @@ public class MovementDetector
 		int expectedTimeBetweenFrames = (int) (1.0 / frameRate * 1000);
 		int maxTimeCreep = expectedTimeBetweenFrames / 10;
 		Coordinate[] lastPosition = new Coordinate[BCode.UNIQUE_ID_COUNT];
+		Vector[] lastOrientation = new Vector[BCode.UNIQUE_ID_COUNT];
 		long[] lastTime = new long[BCode.UNIQUE_ID_COUNT];
 		
 		// process bCode detection file
@@ -62,13 +64,21 @@ public class MovementDetector
 				// detected in the previous frame
 				if ((timestamp - lastTime[record.id]) <= expectedTimeBetweenFrames + maxTimeCreep)
 				{
+					
+					// calculate linear and angular displacement 
 					float distance = lastPosition[record.id].distanceTo(record.center);
-					movementWriter.writeTokens(timestamp, record.id, distance * mmPerPixel);
+					float angle = lastOrientation[record.id].angleBetween(record.orientation);
+					
+					// write movement to file
+					movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
+					
 				}
 				
-				// remember when and where this bCode was last detected
+				// remember when, where, and in which orientation this bCode 
+				// was last detected
 				lastTime[record.id] = timestamp;
 				lastPosition[record.id] = record.center;
+				lastOrientation[record.id] = record.orientation;
 				
 			}		
 
