@@ -4,7 +4,7 @@ bTools is a set of programs for identifying and tracking insects in image sequen
 
 # Getting started
 
-If you want executable binaries, please download them from our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions in the [wiki](https://github.com/gernat/btools/wiki).
+If you just want to use our software, please download our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions in the [wiki](https://github.com/gernat/btools/wiki).
 
 If you want to experiment with the code, please choose a branch and download or clone the repository. Next, import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go.
 
