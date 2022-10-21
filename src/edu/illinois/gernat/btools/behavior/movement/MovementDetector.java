@@ -69,9 +69,9 @@ public class MovementDetector
 					float distance = lastPosition[record.id].distanceTo(record.center);
 					float angle = lastOrientation[record.id].angleBetween(record.orientation);
 					
-					// write movement to file if the linear or angular 
-					// displacement is within the respective thresholds
-					if (((distance >= minLinearDisplacement) && (distance <= maxLinearDisplacement)) || ((Math.abs(angle) >= minAngularDisplacement) && (Math.abs(angle) <= maxAngularDisplacement))) movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
+					// write movement to file if the linear and/or angular 
+					// displacement is within the specified thresholds
+					if (((minLinearDisplacement != -1) && (minAngularDisplacement != -1) && ((distance >= minLinearDisplacement) || (Math.abs(angle) >= minAngularDisplacement))) || ((maxLinearDisplacement != -1) && (maxAngularDisplacement != -1) && (distance <= maxLinearDisplacement) && (Math.abs(angle) <= maxAngularDisplacement)) || ((minLinearDisplacement != -1) && (minAngularDisplacement != -1) && (maxLinearDisplacement != -1) && (maxAngularDisplacement != -1))) movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
 					
 				}
 				
@@ -109,9 +109,9 @@ public class MovementDetector
 		System.out.println("- filtered.data.file       file containing the bCode detection results. Must be");		
 		System.out.println("                           sorted by timestamp column");
 		System.out.println("- frame.rate               frame rate at which bCodes were recorded");
-		System.out.println("- max.angular.displacement abolute maximum angular displacement to be reported");
+		System.out.println("- max.angular.displacement absolute maximum angular displacement to be reported");
 		System.out.println("- max.linear.displacement  maximum linear displacement to be reported");
-		System.out.println("- min.angular.displacement abolute minimum angular displacement to be reported");
+		System.out.println("- min.angular.displacement absolute minimum angular displacement to be reported");
 		System.out.println("- min.linear.displacement  minimum linear displacement to be reported");
 		System.out.println("- mm.per.pixel             real-world spatial extend represented by a single");
 		System.out.println("                           pixel");
@@ -136,19 +136,29 @@ public class MovementDetector
 		parameters.initialize(args);
 		String filteredDataFile = parameters.getString("filtered.data.file");
 		int frameRate = parameters.getInteger("frame.rate");
-		double maxAngularDisplacement = parameters.getDouble("max.angular.displacement"); 
-		double maxLinearDisplacement = parameters.getDouble("max.linear.displacement");
-		double minAngularDisplacement = parameters.getDouble("min.angular.displacement");
-		double minLinearDisplacement = parameters.getDouble("min.linear.displacement");
 		double mmPerPixel = parameters.getDouble("mm.per.pixel");
+		boolean minThresholdsPresent = parameters.exists("min.linear.displacement") || parameters.exists("min.angular.displacement");
+		boolean maxThresholdsPresent = parameters.exists("max.linear.displacement") || parameters.exists("max.angular.displacement");
+		if (minThresholdsPresent && maxThresholdsPresent) throw new IllegalStateException("Minimum and maximum displacement parameters cannot be specified together.");
+		double minAngularDisplacement = -1;
+		double minLinearDisplacement = -1;
+		double maxAngularDisplacement = -1; 
+		double maxLinearDisplacement = -1;
+		if (minThresholdsPresent)
+		{
+			minLinearDisplacement = parameters.exists("min.linear.displacement") ? parameters.getDouble("min.linear.displacement") : 0;
+			minAngularDisplacement = parameters.exists("min.angular.displacement") ? parameters.getDouble("min.angular.displacement") : 0;
+			minLinearDisplacement /= mmPerPixel;
+			minAngularDisplacement = minAngularDisplacement / 180 * Math.PI;
+		}
+		if (maxThresholdsPresent)
+		{
+			maxLinearDisplacement = parameters.exists("max.linear.displacement") ? parameters.getDouble("max.linear.displacement") : Double.MAX_VALUE;
+			maxAngularDisplacement = parameters.exists("max.angular.displacement") ? parameters.getDouble("max.angular.displacement") : Double.MAX_VALUE; 
+			maxLinearDisplacement /= mmPerPixel;
+			maxAngularDisplacement = maxAngularDisplacement / 180 * Math.PI;
+		}
 		String movementFile = parameters.getString("movement.file");
-		
-		// convert linear displacement thresholds to pixels and angular 
-		// displacement thresholds to radians
-		minLinearDisplacement /= mmPerPixel;
-		maxLinearDisplacement /= mmPerPixel;
-		minAngularDisplacement = minAngularDisplacement / 180 * Math.PI;
-		maxAngularDisplacement = maxAngularDisplacement / 180 * Math.PI;
 		
 		// detect movement
 		detectMovement(filteredDataFile, movementFile, frameRate, minLinearDisplacement, maxLinearDisplacement, minAngularDisplacement, maxAngularDisplacement, mmPerPixel);
