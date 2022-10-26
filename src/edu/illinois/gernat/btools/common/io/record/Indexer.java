@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2017, 2018, 2019, 2020, 2021 University of Illinois Board of 
- * Trustees.
+ * Copyright (C) 2017, 2018, 2019, 2020, 2021, 2022 University of Illinois 
+ * Board of Trustees.
  *
  * This file is part of bTools.
  *
@@ -62,8 +62,8 @@ public class Indexer
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("Indexer (bTools) 0.15.0");
-		System.out.println("Copyright (C) 2017-2021 University of Illinois Board of Trustees");
+		System.out.println("Indexer (bTools) 0.15.1");
+		System.out.println("Copyright (C) 2017-2022 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
