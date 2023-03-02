@@ -6,24 +6,30 @@ labels: ''
 assignees: ''
 ---
 
-**Description**
-Please provide a clear and concise description of what the bug is.
+## Description
 
-**To reproduce**
-Describe how to reproduce the behavior.
+_Please provide a clear and concise description of what the bug is._
+
+## To reproduce
+
+_Describe how to reproduce the behavior._
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Expected behavior**
-Provide a clear and concise description of what you expected to happen.
+## Expected behavior
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+_Provide a clear and concise description of what you expected to happen._
 
-**Environment** 
-Please complete the following information.
+## Screenshots
+
+_If applicable, add screenshots to help explain your problem._
+
+## Environment
+
+_Please complete the following information._
  
  - Device: [e.g. PC]
  - Architecture: [e.g. x86_64]
@@ -31,5 +37,6 @@ Please complete the following information.
  - Java Version: [e.g. 1.8.0] 
  - bTools Version: [e.g. v0.13.0]
  
-**Additional context**
-Add any other context about the problem here.
+## Additional context
+
+_Add any other context about the problem here._
