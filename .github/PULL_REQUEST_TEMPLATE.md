@@ -25,6 +25,4 @@ _Put an X in the boxes that apply. If you're unsure about any of them, please as
 
 ## Further comments
 
-_If there is anything else you would like to communicate, please say it here._
-
-
+_Add any other comments about the pull request here._
