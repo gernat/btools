@@ -1,6 +1,9 @@
 package edu.illinois.gernat.btools.behavior.flightactivity;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -35,13 +38,28 @@ public class FlightActivityDetector
 
 	private static final double CREEP_FACTOR = 0.1;
 	
+	private static final String THIRD_PARTY_LICENSES_FILE = "flight_activity_detector_3rd_party_licenses.txt";
+	
 	// assumptions: filtered.data.file must be sorted by timestamp
 	public static void main(String[] args) throws IOException, SAXException, JAXBException, ParseException
 	{
 		
-		// get arguments
+		// show version, copyright, and usage information if no arguments were 
+		// given on the command line 
+		if (args.length == 0) 
+		{
+			showVersionAndCopyright();
+			System.out.println();
+			showUsageInformation();		
+			System.exit(1);
+		}
+		
+		// obtain command line arguments; show credits if necessary
 		Parameters parameters = Parameters.INSTANCE;
 		parameters.initialize(args);
+		if ((parameters.exists("show.credits")) && (parameters.getBoolean("show.credits"))) showCredits();
+		
+		// set parameters
 		String bCodeDetectionsFile = parameters.getString("filtered.data.file");
 		int frameRate = parameters.getInteger("frame.rate"); // Hz
 		String entranceEventsFile = parameters.getString("entrance.events.file");
@@ -178,6 +196,43 @@ public class FlightActivityDetector
 		// return features
 		return features;
 		
+	}
+	
+	private static void showVersionAndCopyright() 
+	{
+		System.out.println("Flight Activity Detector (bTools) 0.15.1");
+		System.out.println("Copyright (C) 2017-2022 University of Illinois Board of Trustees");
+		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
+		System.out.println("This is free software: you are free to change and redistribute it.");
+		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
+	}
+	
+	private static void showUsageInformation() 
+	{
+		System.out.println("Usage: java -jar flight_activity_detector.jar PARAMETER=VALUE...");
+		System.out.println("Detect hive exits and returns.");
+		System.out.println();  		
+		System.out.println("Parameters:");
+		System.out.println("- entrance.events.file output file containing detected entrance events");
+		System.out.println("- filtered.data.file   file containing the bCode detection results. Must be sorted");		
+		System.out.println("                       by timestamp column");
+		System.out.println("- frame.rate           frame rate at which bCodes were recorded");
+		System.out.println("- show.credits         set to \"true\" or 1 to display credits and exit");
+	}
+	
+	private static void showCredits() throws IOException 
+	{
+		showVersionAndCopyright();
+		System.out.println();
+		System.out.println("This software uses the following third party software that is distributed");
+		System.out.println("under its own terms:");
+		System.out.println();
+		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(THIRD_PARTY_LICENSES_FILE); 
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		while (reader.ready()) System.out.println(reader.readLine());
+		reader.close();
+		inputStream.close();
+		System.exit(1);
 	}
 
 }
