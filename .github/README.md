@@ -1,6 +1,6 @@
 # Overview
 
-bTools is a set of programs for identifying and tracking insects in image sequences with the help of a tiny matrix barcode, and for detecting movement as well as mouth-to-mouth exchange of liquid food among honey bees. 
+bTools is a set of programs for identifying and tracking insects in images or videos with the help of a tiny matrix barcode, called bCode. It also contains software for detecting movement and, for honey bees, flight activity and the mouth-to-mouth exchange of liquid (trophallaxis). 
 
 # Getting started
 
@@ -15,7 +15,8 @@ If you want to experiment with the code, please choose a branch and download or 
 `Converter.java` - converts raw bCode detection results to a more useful format.  
 `Indexer.java` - indexes raw bCode detection results.  
 `TrophallaxisDetector.java` - detects liquid food exchange among honey bees.  
-`MovementDetector.java` - detects bCode movement.
+`MovementDetector.java` - detects bCode movement.  
+`FlightActivityDetector.java` - detects hive exits and returns.
 
 # Documentation
 
