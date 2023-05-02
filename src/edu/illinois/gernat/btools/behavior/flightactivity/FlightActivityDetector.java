@@ -71,9 +71,9 @@ public class FlightActivityDetector
 	{
 		
 		// load random forest model and create an evaluator
-		MiningModelEvaluator evaluator = (MiningModelEvaluator) new LoadingModelEvaluatorBuilder().load(FlightActivityDetector.class.getResourceAsStream(RANDOM_FOREST_MODEL_FILE)).build();
+		MiningModelEvaluator evaluator = (MiningModelEvaluator) new LoadingModelEvaluatorBuilder().load(Thread.currentThread().getContextClassLoader().getResourceAsStream(RANDOM_FOREST_MODEL_FILE)).build();
 		evaluator.verify();
-
+ 
 		// get evaluator input fields
 		List<? extends InputField> inputFields = evaluator.getInputFields();
 		
