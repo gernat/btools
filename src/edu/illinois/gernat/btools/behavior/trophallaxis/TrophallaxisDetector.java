@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2017, 2018, 2019, 2020, 2021, 2022 University of Illinois 
- * Board of Trustees.
+ * Copyright (C) 2017, 2018, 2019, 2020, 2021, 2022, 2023 University of  
+ * Illinois Board of Trustees.
  *
  * This file is part of bTools.
  *
@@ -55,6 +55,8 @@ import edu.illinois.gernat.btools.common.parameters.Parameters;
 
 public class TrophallaxisDetector
 {
+	
+	private static final String THIRD_PARTY_LICENSES_FILE = "flight_activity_detector_3rd_party_licenses.txt";
 
 	public static boolean isContact(Coordinate headCenter1, Coordinate headCenter2, Vector orientation1, Vector orientation2, int minDistance, int maxDistance, double maxAngleSum)
 	{
@@ -236,8 +238,8 @@ public class TrophallaxisDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("Trophallaxis Detector (bTools) 0.15.1");
-		System.out.println("Copyright (C) 2017-2022 University of Illinois Board of Trustees");
+		System.out.println("Trophallaxis Detector (bTools) 0.16.0");
+		System.out.println("Copyright (C) 2017-2023 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
@@ -311,10 +313,10 @@ public class TrophallaxisDetector
 	{
 		showVersionAndCopyright();
 		System.out.println();
-		System.out.println("This software uses the following third party software that is distributed");
-		System.out.println("under its own terms:");
+		System.out.println("This software uses the following third party libraries that are distributed");
+		System.out.println("under their own terms:");
 		System.out.println();
-		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LICENSE-3RD-PARTY"); 
+		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(THIRD_PARTY_LICENSES_FILE); 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		while (reader.ready()) System.out.println(reader.readLine());
 		reader.close();
