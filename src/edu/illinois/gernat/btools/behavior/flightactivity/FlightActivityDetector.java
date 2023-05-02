@@ -80,7 +80,7 @@ public class FlightActivityDetector
 
 		// save events to disk
 		TokenWriter eventWriter = new TokenWriter(entranceEventsFile);
-		for (EntranceEvent entranceEvent : entranceEvents) eventWriter.writeTokens(entranceEvent);
+		for (EntranceEvent entranceEvent : entranceEvents) if (entranceEvent.type != "other") eventWriter.writeTokens(entranceEvent);
 		eventWriter.close();
 
 	}
