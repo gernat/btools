@@ -224,8 +224,8 @@ public class FlightActivityDetector
 	{
 		showVersionAndCopyright();
 		System.out.println();
-		System.out.println("This software uses the following third party software that is distributed");
-		System.out.println("under its own terms:");
+		System.out.println("This software uses the following third party libraries that are distributed");
+		System.out.println("under their own terms:");
 		System.out.println();
 		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(THIRD_PARTY_LICENSES_FILE); 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
