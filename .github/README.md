@@ -36,7 +36,7 @@ Please consider contributing your improvements and additions by sending a [pull 
 
 # License
 
-This software is distributed under the [GNU Affero General Public License v3 license](https://github.com/gernat/btools/blob/master/LICENSE) and uses third party software that is distributed under its [own terms](https://github.com/gernat/btools/blob/master/res/LICENSE-3RD-PARTY). 
+This software is distributed under the [GNU Affero General Public License v3 license](https://github.com/gernat/btools/blob/master/LICENSE) and uses third party software that is distributed under its own terms. 
 
 # Contact
 
