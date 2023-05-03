@@ -84,7 +84,7 @@ public class FlightActivityDetector
 		String entranceEventsFile = parameters.getString("entrance.events.file");
 
 		// validate arguments
-		if (frameRate != EXPECTED_FRAME_RATE) throw new IllegalStateException("The random forest expects a frame rate of " + EXPECTED_FRAME_RATE + "Hz.");
+		if (frameRate != EXPECTED_FRAME_RATE) throw new IllegalStateException("The random forest expects a frame rate of " + EXPECTED_FRAME_RATE + " Hz.");
 		
 		// predict feeding events
 		List<Feature> features = computeFeatures(bCodeDetectionsFile, frameRate);
