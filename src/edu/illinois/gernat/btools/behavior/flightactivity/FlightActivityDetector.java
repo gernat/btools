@@ -233,8 +233,8 @@ public class FlightActivityDetector
 		System.out.println();  		
 		System.out.println("Parameters:");
 		System.out.println("- entrance.events.file output file containing detected entrance events");
-		System.out.println("- filtered.data.file   file containing the bCode detection results. Must be sorted");		
-		System.out.println("                       by timestamp column");
+		System.out.println("- filtered.data.file   file containing the bCode detection results. Must be");		
+		System.out.println("                       sorted by timestamp column");
 		System.out.println("- frame.rate           frame rate at which bCodes were recorded");
 		System.out.println("- show.credits         set to \"true\" or 1 to display credits and exit");
 	}
