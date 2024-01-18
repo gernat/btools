@@ -168,8 +168,8 @@ public class BCodeDetector
 		System.out.println("- show.credits              set to \"true\" or 1 to display credits and exit");
 		System.out.println();
 		System.out.println("Notes:");
-		System.out.println("If the input.file is a plain text file, this file must list one image or.");
-		System.out.println("video file per line");
+		System.out.println("If the input.file is a plain text file, this file must list one image or");
+		System.out.println("video file per line.");
 		System.out.println("");
 		System.out.println("Image and video file names need to be a valid date in the format");
 		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS. File name and extension must be separated by a dot.");
@@ -235,7 +235,7 @@ public class BCodeDetector
 		int frameRate = -1;
 		for (String inputFilename : ioMap.keySet()) 
 		{
-			if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4") || inputFilename.endsWith(".mjpeg"))
+			if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4"))
 			{
 				frameRate = parameters.getInteger("frame.rate");
 				break;
@@ -262,7 +262,7 @@ public class BCodeDetector
 			try
 			{
 				if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png")) bCodeDetectionResults = processImage(inputFilename);
-				else if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4") || inputFilename.endsWith(".mjpeg")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
+				else if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
 			}
 			catch (Exception e)
 			{
@@ -302,7 +302,7 @@ public class BCodeDetector
 
 	private static void queueInputFile(HashMap<String, String> ioMap, String inputFilename)
 	{
-		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4") || inputFilename.endsWith(".mjpeg")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
+		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
 		else throw new IllegalStateException("bCode detector: unsupported input file extension");
 	}
 	
