@@ -134,7 +134,7 @@ public class Predictor {
             }
             long timestamp = 0;
             try {
-                timestamp = DATE_FORMAT.parse(imageName.substring(imageName.lastIndexOf(File.separator) + 1)).getTime();
+                timestamp = DATE_FORMAT.parse(imageName.substring(imageName.lastIndexOf('/') + 1)).getTime();
             } catch (ParseException e) {
                 System.err.println("Couldn't convert readable timestamp to unix timestamp.");
                 System.err.println(imagePath);
