@@ -56,7 +56,8 @@ public class NeuralNetwork {
                 if (results.numDimensions() != 1 || rshape[0] != images.length) {
                     throw new RuntimeException(String.format("Expected model produce a [N] shaped where N is the number of images, instead it produced one with shape %s", Arrays.toString(rshape)));
                 }
-                float[] res = results.copyTo(new float[images.length]);
+                float[] res = new float[images.length];
+                results.copyTo(res);
                 inputs.close();
                 results.close();
                 return res;
