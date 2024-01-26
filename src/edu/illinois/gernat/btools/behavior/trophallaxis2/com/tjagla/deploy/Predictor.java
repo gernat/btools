@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
@@ -55,7 +56,7 @@ public class Predictor {
         File trFolder = Files.createTempDirectory("tropha").toFile();
         trFolder.deleteOnExit();
 
-        URL trmodelJAR = Predictor.class.getResource("/tropha"+add+"/trained_model.pb");
+        URL trmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_occurrence_model.pb");
         File trmodel = File.createTempFile("trmodel",".pb",trFolder);
         trmodel.deleteOnExit();
         FileUtils.copyURLToFile(trmodelJAR,trmodel);
@@ -64,7 +65,7 @@ public class Predictor {
         File dirFolder = Files.createTempDirectory("direction").toFile();
         dirFolder.deleteOnExit();
 
-        URL dirmodelJAR = Predictor.class.getResource("/direction"+add+"/trained_model.pb");
+        URL dirmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_direction_model.pb");
         File dirmodel = File.createTempFile("dirmodel",".pb",dirFolder);
         dirmodel.deleteOnExit();
         FileUtils.copyURLToFile(dirmodelJAR,dirmodel);
