@@ -4,7 +4,7 @@ package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io;
 /**
  * Created by tobias on 21.09.16.
  */
-public class LabeledBee implements Bee {
+public class LabeledBee {
     private final int id;
     private final float x;
     private final float y;
