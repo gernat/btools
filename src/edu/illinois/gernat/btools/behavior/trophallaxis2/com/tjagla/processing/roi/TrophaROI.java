@@ -23,9 +23,9 @@ public class TrophaROI implements PairROI {
         this.height = height;
     }
 
-    public CenterROI calcROI(Tuple p) {
-        LabeledBee beeA = (LabeledBee) p.a;
-        LabeledBee beeB = (LabeledBee) p.b;
+    public CenterROI calcROI(Tuple<LabeledBee, LabeledBee> p) {
+        LabeledBee beeA = p.a;
+        LabeledBee beeB = p.b;
 
         float[] points1 = beeA.getCorners();
         float[] points2 = beeB.getCorners();

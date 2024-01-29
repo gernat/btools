@@ -21,7 +21,6 @@ import org.apache.commons.io.FileUtils;
 
 import edu.illinois.gernat.btools.behavior.trophallaxis.Contact;
 import edu.illinois.gernat.btools.behavior.trophallaxis.TrophallaxisDetector;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.Bee;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.PairProcessor;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.TrophallaxisProcessor;
@@ -178,8 +177,8 @@ public class Predictor {
                 // convert image coordinates to world coordinates
                 switchCoordinates(corners1); 
                 switchCoordinates(corners2); 
-                Bee curBee1 = new LabeledBee(imageBee1.id, imageBee1.center.x, -imageBee1.center.y, imageBee1.orientation.dx, -imageBee1.orientation.dy, 0, corners1);
-                Bee curBee2 = new LabeledBee(imageBee2.id, imageBee2.center.x, -imageBee2.center.y, imageBee2.orientation.dx, -imageBee2.orientation.dy, 0, corners2);
+                LabeledBee curBee1 = new LabeledBee(imageBee1.id, imageBee1.center.x, -imageBee1.center.y, imageBee1.orientation.dx, -imageBee1.orientation.dy, 0, corners1);
+                LabeledBee curBee2 = new LabeledBee(imageBee2.id, imageBee2.center.x, -imageBee2.center.y, imageBee2.orientation.dx, -imageBee2.orientation.dy, 0, corners2);
                 smallImages[i] = processor.processSingle(greatImage, Tuple.of(curBee1, curBee2));
             }
 

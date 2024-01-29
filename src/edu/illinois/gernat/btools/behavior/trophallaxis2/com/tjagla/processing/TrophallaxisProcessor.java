@@ -24,9 +24,9 @@ public class TrophallaxisProcessor extends PairProcessor {
         super(imageSource, writer);
     }
 
-    protected BufferedImage manipulateHive(BufferedImage hive, Tuple p) {
-        LabeledBee beeA = (LabeledBee) p.a;
-        LabeledBee beeB = (LabeledBee) p.b;
+    protected BufferedImage manipulateHive(BufferedImage hive, Tuple<LabeledBee, LabeledBee> p) {
+        LabeledBee beeA = p.a;
+        LabeledBee beeB = p.b;
 
         float[] points1 = beeA.getCorners();
         float[] points2 = beeB.getCorners();

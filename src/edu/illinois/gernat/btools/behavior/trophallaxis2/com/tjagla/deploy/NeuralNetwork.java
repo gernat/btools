@@ -41,12 +41,13 @@ public class NeuralNetwork {
             x.put(image.getData().getPixels(0, 0, inputImageWidth, inputImageHeight, new int[inputImageWidth * inputImageHeight]));
         }
         x.flip();
-        Tensor inputs = Tensor.create(new long[]{images.length, inputImageWidth, inputImageHeight},x);
+        Tensor<Integer> inputs = Tensor.create(new long[]{images.length, inputImageWidth, inputImageHeight},x);
 
         try (Graph g = new Graph()) {
             g.importGraphDef(this.graphDef);
             try (Session s = new Session(g)) {
-                Tensor results = s.runner().feed("input",inputs).fetch("output").run().get(0);
+            	@SuppressWarnings("unchecked")
+                Tensor<Float> results = (Tensor<Float>) s.runner().feed("input",inputs).fetch("output").run().get(0);
                 final long[] rshape = results.shape();
                 if (results.numDimensions() != 1 || rshape[0] != images.length) {
                     throw new RuntimeException(String.format("Expected model produce a [N] shaped where N is the number of images, instead it produced one with shape %s", Arrays.toString(rshape)));

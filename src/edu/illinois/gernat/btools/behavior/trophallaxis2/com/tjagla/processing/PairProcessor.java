@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Map;
 
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.read.ImageSource;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.write.TrophallaxisWriter;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.Operator;
@@ -35,13 +36,13 @@ public abstract class PairProcessor {
      *
      * @param bees map from hive image paths to bCode descriptions (bees)
      */
-    public void process(Map<String, ArrayList<Tuple>> bees) {
+    public void process(Map<String, ArrayList<Tuple<LabeledBee, LabeledBee>>> bees) {
         for (String imageFName : bees.keySet()) {
 
             if (!imageSource.invoke(imageFName)) continue;
             BufferedImage hive = imageSource.getHiveImage();
 
-            for (Tuple p : bees.get(imageFName)) {
+            for (Tuple<LabeledBee, LabeledBee> p : bees.get(imageFName)) {
                 BufferedImage manipulated = processSingle(hive, p);
                 writer.write(imageFName, p, manipulated);
             }
@@ -58,7 +59,7 @@ public abstract class PairProcessor {
      * @param p    description of the current pair of bees
      * @return clipped and manipulated small image
      */
-    public BufferedImage processSingle(BufferedImage hive, Tuple p) {
+    public BufferedImage processSingle(BufferedImage hive, Tuple<LabeledBee, LabeledBee> p) {
         CenterROI subImageDesc = null;
         if (roiCalculator != null) {
             subImageDesc = roiCalculator.calcROI(p);
@@ -76,7 +77,7 @@ public abstract class PairProcessor {
         return manipulated;
     }
 
-    protected abstract BufferedImage manipulateHive(BufferedImage hive, Tuple p);
+    protected abstract BufferedImage manipulateHive(BufferedImage hive, Tuple<LabeledBee, LabeledBee> p);
 
     public void addManipulator(Operator m) {
         this.imageProcessors.add(m);
