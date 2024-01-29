@@ -161,8 +161,6 @@ public class Predictor {
 
 
 
-        String outPutFileEnding = "txt";
-        
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         
 
@@ -177,7 +175,7 @@ public class Predictor {
         for (String imagePath : imagesList) {
             String imageName = imagePath.substring(0, imagePath.lastIndexOf("."));
             try {
-                Files.deleteIfExists(new File(imageName + "." + outPutFileEnding).toPath());
+                Files.deleteIfExists(new File(imageName + ".txt").toPath());
             } catch (Exception e) {
                 System.err.println("Can't read/write from/to disk.");
                 System.err.println(imagePath);
@@ -215,7 +213,7 @@ public class Predictor {
 
             // check if records available
             if (imageBees == null || imageBees.isEmpty()) {
-                new File(imageName + "." + outPutFileEnding).createNewFile();
+                new File(imageName + ".txt").createNewFile();
                 continue;
             }
 
@@ -223,7 +221,7 @@ public class Predictor {
 
             // check if there are at least one pair with contact
             if (contacts.isEmpty()) {
-                new File(imageName + "." + outPutFileEnding).createNewFile();
+                new File(imageName + ".txt").createNewFile();
                 continue;
             }
             
@@ -279,30 +277,12 @@ public class Predictor {
             }
 
             // write output
-            PrintWriter outputWriter = new PrintWriter(new File(imageName + ".tmp"));
+            PrintWriter outputWriter = new PrintWriter(new File(imageName + ".txt"));
             for (int i = 0; i < res1.length; i++) {
                 outputWriter.println(timestamp + "," + contacts.get(i).id1 + "," + contacts.get(i).id2 + "," + res1[i] + "," + res2[i]);
             }
             outputWriter.close();
 
-            // check output file
-            BufferedReader br = new BufferedReader(new FileReader(imageName + ".tmp"));
-            boolean outputWasCorrect = true;
-            for (int i = 0; i < res2.length; i++) {
-                if(!br.readLine().equals(timestamp + "," + contacts.get(i).id1 + "," + contacts.get(i).id2 + "," + res1[i] + "," + res2[i])) {
-                    System.err.println("Error while writing the output file.");
-                    System.err.println(imagePath);
-                    outputWasCorrect = false;
-                    break;
-                }
-            }
-            br.close();
-            if (outputWasCorrect) {
-                new File(imageName + ".tmp").renameTo(new File(imageName + "." + outPutFileEnding));
-            }
-            else {
-                Files.delete(new File(imageName + ".tmp").toPath());
-            }
         }
 
     }
