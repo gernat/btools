@@ -44,22 +44,6 @@ public class TrophaROI implements PairROI {
         Coordinate center = aRot.calculateMidPoint(bRot);
         Vector vec1 = new Vector(aRot, bRot);
         float angle = vec1.angleBetween(BASE);
-//        System.out.println(angle);
-//        if (Math.abs(angle) < Math.PI/2.0) {
-//            beeA.setToLower();
-//        }
-//        else {
-//            beeB.setToLower();
-//        }
-//        if (aVec.clone().rotate(angle).dx<0) {
-//            if (bVec.clone().rotate(angle).dx < 0) {
-//                angle += Math.PI;
-//            }
-//        }
-//        vec1.normalize();
-//        vec1.reverse();
-//        center.translate(vec1,height/2).translate(vec1.rotate((float) (-Math.PI/2.0)),(int)(width/2 + adjust));
-
         return new CenterROI(new Coordinate(center.x, -center.y), angle, width, adjust, height);
     }
 

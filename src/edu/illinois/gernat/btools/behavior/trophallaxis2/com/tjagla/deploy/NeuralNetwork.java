@@ -21,14 +21,9 @@ public class NeuralNetwork {
     private final int inputImageWidth;
     private final int inputImageHeight;
 
-//    private final Session session;
-
     private final byte[] graphDef;
     public NeuralNetwork(String modelName, int inputImageWidth, int inputImageHeight) {
         this.graphDef = readAllBytesOrExit(Paths.get(modelName));
-//        Graph g = new Graph();
-//        g.importGraphDef(graphDef);
-//        session = new Session(g);
         this.inputImageHeight = inputImageHeight;
         this.inputImageWidth = inputImageWidth;
     }

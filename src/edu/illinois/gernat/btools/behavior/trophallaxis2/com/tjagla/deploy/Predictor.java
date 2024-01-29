@@ -1,21 +1,11 @@
 package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.deploy;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.Bee;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.PairProcessor;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.TrophallaxisProcessor;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.MyLookUpOp;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.TrophaROI;
-
-import org.apache.commons.io.FileUtils;
-
-import java.awt.*;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
@@ -27,8 +17,16 @@ import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
+
 import edu.illinois.gernat.btools.behavior.trophallaxis.Contact;
 import edu.illinois.gernat.btools.behavior.trophallaxis.TrophallaxisDetector;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.Bee;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.PairProcessor;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.TrophallaxisProcessor;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.MyLookUpOp;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.TrophaROI;
 import edu.illinois.gernat.btools.common.io.record.IndexedReader;
 import edu.illinois.gernat.btools.common.io.record.Record;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
@@ -48,10 +46,6 @@ public class Predictor {
         // parse command line arguments
         Parameters parameters = Parameters.INSTANCE;
         parameters.initialize(args);
-//        String add = parameters.getString("network.file.name");
-//        String add = "_0972";
-        String add = "";
-//        String add = "";
 
         File trFolder = Files.createTempDirectory("tropha").toFile();
         trFolder.deleteOnExit();
@@ -60,7 +54,6 @@ public class Predictor {
         File trmodel = File.createTempFile("trmodel",".pb",trFolder);
         trmodel.deleteOnExit();
         FileUtils.copyURLToFile(trmodelJAR,trmodel);
-//        String netDefPath1st = parameters.getString("network.model.file.1");
 
         File dirFolder = Files.createTempDirectory("direction").toFile();
         dirFolder.deleteOnExit();
@@ -69,12 +62,8 @@ public class Predictor {
         File dirmodel = File.createTempFile("dirmodel",".pb",dirFolder);
         dirmodel.deleteOnExit();
         FileUtils.copyURLToFile(dirmodelJAR,dirmodel);
-//        String netDefPath2nd = parameters.getString("network.model.file.2");
 
-        // network.definition.folder=/home/tobias/data/Persoenliche_Daten/Docs/work/robionsonLab/egg_laying_worker/tensorflow/server/logs/great_nets/2016-12-12_12-29-17-0/1/
         String bCodeDetectionPath = parameters.getString("filtered.data.file");
-        // bCode.detection.file=/home/tobias/data/Persoenliche_Daten/Docs/work/robionsonLab/egg_laying_worker/data/all/raw_bcode_detection_results.txt
-//        String outputPath = parameters.getString("output.path");
         String imagesFile = parameters.getString("image.list.file");
 
 
@@ -82,9 +71,7 @@ public class Predictor {
         double geometryMaxAngleSum = Math.toRadians(parameters.getInteger("geometry.max.angle.sum")); // 540 // HACK
         int geometryMaxDistance = parameters.getInteger("geometry.max.distance"); // 140
         int geometryMinDistance = parameters.getInteger("geometry.min.distance"); // 0
-        // image.file=/home/tobias/data/Persoenliche_Daten/Docs/work/robionsonLab/egg_laying_worker/data/First_training_set/2016-06-01-10-00-00-763.jpg
         String outPutFileEnding = "txt";
-        // output.file.ending=n2_02
 
         // check image source
         String[] imagesList;
@@ -104,7 +91,7 @@ public class Predictor {
         processor.setRoiCalculator(new TrophaROI(96, 160));
         processor.addManipulator(new MyLookUpOp((short) 200));
 
-        // iterate throug all hive images
+        // iterate through all hive images
         for (String imagePath : imagesList) {
             String imageName = imagePath.substring(0, imagePath.lastIndexOf("."));
             try {
@@ -161,7 +148,6 @@ public class Predictor {
             BufferedImage[] smallImages = new BufferedImage[contacts.size()];
             // iterate over all detected bCods in the hive image
             for (int i = 0; i < contacts.size(); ++i) {
-                // TODO create pair
                 Contact bees = contacts.get(i);
                 Record imageBee1 = null;
                 MetaCode mID1 = null;
@@ -173,7 +159,6 @@ public class Predictor {
                     System.err.println(imagePath);
                     System.err.println(timestamp + " " + imageBee1.id + " " + imageBee1.center);
                     e.printStackTrace();
-//                    smallImages[i] = new BufferedImage(120, 200, BufferedImage.TYPE_BYTE_GRAY);
                     continue;
                 }
                 Record imageBee2 = null;
@@ -186,21 +171,21 @@ public class Predictor {
                     System.err.println(imagePath);
                     System.err.println(timestamp + " " + imageBee2.id + " " + imageBee1.center);
                     e.printStackTrace();
-//                    smallImages[i] = new BufferedImage(120, 200, BufferedImage.TYPE_BYTE_GRAY);
                     continue;
                 }
                 float[] corners1 = mID1.calculateBoundingBoxCoordinates();
                 float[] corners2 = mID2.calculateBoundingBoxCoordinates();
-                switchCoordinates(corners1); // convert image coordinates to world coordinates
-                switchCoordinates(corners2); // convert image coordinates to world coordinates
+                // convert image coordinates to world coordinates
+                switchCoordinates(corners1); 
+                switchCoordinates(corners2); 
                 Bee curBee1 = new LabeledBee(imageBee1.id, imageBee1.center.x, -imageBee1.center.y, imageBee1.orientation.dx, -imageBee1.orientation.dy, 0, corners1);
                 Bee curBee2 = new LabeledBee(imageBee2.id, imageBee2.center.x, -imageBee2.center.y, imageBee2.orientation.dx, -imageBee2.orientation.dy, 0, corners2);
                 smallImages[i] = processor.processSingle(greatImage, Tuple.of(curBee1, curBee2));
-//                System.out.println("image number: "+i);
             }
 
-            float[] res1; // predict small images with the neural network
-            float[] res2; // predict small images with the neural network
+            // predict small images with the neural network
+            float[] res1; 
+            float[] res2; 
             try {
                 res1 = trophaPredictor.predict(smallImages);
                 res2 = directionPredictor.predict(smallImages);
@@ -213,7 +198,6 @@ public class Predictor {
 
             // write output
             PrintWriter outputWriter = new PrintWriter(new File(imageName + ".tmp"));
-//            PrintWriter outputWriter = new PrintWriter(new File(imageName + "." + outPutFileEnding));
             for (int i = 0; i < res1.length; i++) {
                 outputWriter.println(timestamp + "," + contacts.get(i).id1 + "," + contacts.get(i).id2 + "," + res1[i] + "," + res2[i]);
             }
@@ -239,7 +223,6 @@ public class Predictor {
             }
         }
 
-//        System.out.println("duration: "+(System.currentTimeMillis()-startTime)+"ms");
     }
 
     /**

@@ -30,11 +30,6 @@ public class TrophallaxisProcessor extends PairProcessor {
 
         float[] points1 = beeA.getCorners();
         float[] points2 = beeB.getCorners();
-//        Coordinate a = new Coordinate(points1[0],-points1[1]).calculateMidPoint(new Coordinate(points1[6],-points1[7]));
-//        Vector aVec = new Vector(beeA.getDx(),-beeA.getDy());
-//
-//        Coordinate b = new Coordinate(points2[0],-points2[1]).calculateMidPoint(new Coordinate(points2[6],-points2[7]));
-//        Vector bVec = new Vector(beeB.getDx(),-beeB.getDy());
 
         Polygon p1 = new Polygon();
         Polygon p2 = new Polygon();
@@ -48,7 +43,6 @@ public class TrophallaxisProcessor extends PairProcessor {
             p2.addPoint((int) bLabel.x, (int) bLabel.y);
         }
 
-//            BufferedImage maskImage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics2D = (Graphics2D) hive.getGraphics();
         graphics2D.setColor(new Color(LABEl_COLOR));
         graphics2D.fillPolygon(p1);
@@ -68,21 +62,11 @@ public class TrophallaxisProcessor extends PairProcessor {
         // rotation and clipping
         AffineTransform adjustments = new AffineTransform();
         Coordinate imageCoords = new Coordinate(subImageDesc.center.x, -subImageDesc.center.y);
-        adjustments.rotate(subImageDesc.rotAngle, subImageDesc.width / 2.0, subImageDesc.height / 2.0);//,imageCoords.x,imageCoords.y);
+        adjustments.rotate(subImageDesc.rotAngle, subImageDesc.width / 2.0, subImageDesc.height / 2.0);
         adjustments.translate(-(imageCoords.x - subImageDesc.width / 2.0), -(imageCoords.y - subImageDesc.height / 2.0));
 
-//        AffineTransform at = AffineTransform.getRotateInstance(subImageDesc.rotAngle,imageCoords.x,imageCoords.y);
         AffineTransformOp op = new AffineTransformOp(adjustments, AffineTransformOp.TYPE_BILINEAR);
         pair = op.filter(hive, pair);
-
-//        BufferedImage i = new AffineTransformOp(adjustments, AffineTransformOp.TYPE_BILINEAR).filter(hive, null);
-//        abdomen = new AffineTransformOp(adjustments, AffineTransformOp.TYPE_BILINEAR).filter(hive, abdomen);
-//        try {
-//            abdomen = abdomen.getSubimage((int)(imageCoords.x-subImageDesc.width/2.0+subImageDesc.adjust), (int)(imageCoords.y-subImageDesc.height/2.0), (int)subImageDesc.width, (int)subImageDesc.height);
-//        } catch (RasterFormatException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
 
         if (pair.getType() != BufferedImage.TYPE_BYTE_GRAY) {
             BufferedImage dimg = new BufferedImage(pair.getWidth(), pair.getHeight(), BufferedImage.TYPE_BYTE_GRAY);

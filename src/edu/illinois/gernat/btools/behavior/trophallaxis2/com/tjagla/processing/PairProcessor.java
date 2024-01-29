@@ -88,5 +88,4 @@ public abstract class PairProcessor {
 
     protected abstract BufferedImage clipROI(BufferedImage hive, CenterROI subImageDesc);
 
-
 }
