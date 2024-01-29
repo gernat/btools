@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
@@ -36,52 +38,133 @@ import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
  * Created by tobias on 10.12.16.
  */
 public class Predictor {
+	
+	private static final String THIRD_PARTY_LICENSES_FILE = "trophallaxis_detector_3rd_party_licenses.txt";
+	
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
 
-    public static void main(String[] args) throws IOException {
+	private static void showVersionAndCopyright() 
+	{
+		System.out.println("Trophallaxis Detector (bTools) 0.16.0");
+		System.out.println("Copyright (C) 2017-2023 University of Illinois Board of Trustees");
+		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
+		System.out.println("This is free software: you are free to change and redistribute it.");
+		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
+	}
 
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-
+	private static void showUsageInformation() 
+	{
+		System.out.println("Usage: java -jar trophallaxis_detector.jar PARAMETER=VALUE...");
+		System.out.println("Detect trophllaxis between honey bees.");
+		System.out.println();  		
+		System.out.println("Parameters:");
+		System.out.println("- distance.label.head       average distance between the center of a bee's");
+		System.out.println("                            bCode and the center of her head");
+		System.out.println("- filtered.data.file        file containing the bCode detection results for");
+		System.out.println("                            the file named by the image.filename parameter.");
+		System.out.println("                            Must be sorted by timestamp column");
+		System.out.println("- geometry.max.angle.sum    maximum sum of the angles between a line drawn");
+		System.out.println("                            between the geometrically predicted centers of the");
+		System.out.println("                            head of two potential interaction partners and the");
+		System.out.println("                            orientation vector of their labels");
+		System.out.println("- geometry.max.distance     maximum distance between the geometrically");
+		System.out.println("                            predicted centers of the head of two potential");
+		System.out.println("                            interaction partners");
+		System.out.println("- geometry.min.distance     minimum distance between the geometrically");
+		System.out.println("                            predicted centers of the head of two potential");
+		System.out.println("                            interaction partners");
+		System.out.println("- image.filename            input image file");
+		System.out.println("- image.list.filename       plain text file listing on each line one input");
+		System.out.println("                            image file.");
+		System.out.println("- show.credits              set to \"true\" or 1 to display credits and exit");
+		System.out.println();
+		System.out.println("Notes:");
+		System.out.println("Input image filenames need to be a valid date in the format");
+		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.");
+		System.out.println();
+		System.out.println("Parameters image.filename and trophallaxis.file cannot be specified in");
+		System.out.println("conjunction with the image.list.filename parameter.");
+		System.out.println();
+		System.out.println("If the image.list.filename parameter is given, trophallaxis output file names");
+		System.out.println("are constructed by replacing the input image file extension with 'txt'. Input");
+		System.out.println("image file name and extension must be separated by a dot.");
+	}
+	
+	private static void showCredits() throws IOException 
+	{
+		showVersionAndCopyright();
+		System.out.println();
+		System.out.println("This software uses the following third party libraries that are distributed");
+		System.out.println("under their own terms:");
+		System.out.println();
+		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(THIRD_PARTY_LICENSES_FILE); 
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+		while (reader.ready()) System.out.println(reader.readLine());
+		reader.close();
+		inputStream.close();
+		System.exit(1);
+	}
+	
+    public static void main(String[] args) throws IOException 
+    {
+    	
+		// show version, copyright, and usage information if no arguments were 
+		// given on the command line 
+		if (args.length == 0) 
+		{
+			showVersionAndCopyright();
+			System.out.println();
+			showUsageInformation();		
+			System.exit(1);
+		}
+		
         // parse command line arguments
         Parameters parameters = Parameters.INSTANCE;
         parameters.initialize(args);
+        
+        // show credits, if requested
+        if ((parameters.exists("show.credits")) && (parameters.getBoolean("show.credits"))) showCredits();
 
-        File trFolder = Files.createTempDirectory("tropha").toFile();
-        trFolder.deleteOnExit();
-
-        URL trmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_occurrence_model.pb");
-        File trmodel = File.createTempFile("trmodel",".pb",trFolder);
-        trmodel.deleteOnExit();
-        FileUtils.copyURLToFile(trmodelJAR,trmodel);
-
-        File dirFolder = Files.createTempDirectory("direction").toFile();
-        dirFolder.deleteOnExit();
-
-        URL dirmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_direction_model.pb");
-        File dirmodel = File.createTempFile("dirmodel",".pb",dirFolder);
-        dirmodel.deleteOnExit();
-        FileUtils.copyURLToFile(dirmodelJAR,dirmodel);
-
-        String bCodeDetectionPath = parameters.getString("filtered.data.file");
-        String imagesFile = parameters.getString("image.list.file");
-
-
+        // set arguments
         int distanceLabelHead = parameters.getInteger("distance.label.head"); //60
         double geometryMaxAngleSum = Math.toRadians(parameters.getInteger("geometry.max.angle.sum")); // 540 // HACK
         int geometryMaxDistance = parameters.getInteger("geometry.max.distance"); // 140
         int geometryMinDistance = parameters.getInteger("geometry.min.distance"); // 0
-        String outPutFileEnding = "txt";
-
-        // check image source
+        String bCodeDetectionPath = parameters.getString("filtered.data.file");
+        String imagesFile = parameters.getString("image.list.file");
+        
+        // queue input files
         String[] imagesList;
         if (imagesFile.endsWith(".txt")) {
             imagesList = parseFile(imagesFile);
         } else {
             imagesList = new String[]{imagesFile};
-        }
+        }  
+        
+        // extract CNN models
+        File trFolder = Files.createTempDirectory("tropha").toFile();
+        trFolder.deleteOnExit();
+        URL trmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_occurrence_model.pb");
+        File trmodel = File.createTempFile("trmodel",".pb",trFolder);
+        trmodel.deleteOnExit();
+        FileUtils.copyURLToFile(trmodelJAR,trmodel);
+        File dirFolder = Files.createTempDirectory("direction").toFile();
+        dirFolder.deleteOnExit();
+        URL dirmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_direction_model.pb");
+        File dirmodel = File.createTempFile("dirmodel",".pb",dirFolder);
+        dirmodel.deleteOnExit();
+        FileUtils.copyURLToFile(dirmodelJAR,dirmodel);
 
+        // create CNNs
         NeuralNetwork trophaPredictor = new NeuralNetwork(trmodel.getPath(), 96, 160);
         NeuralNetwork directionPredictor = new NeuralNetwork(dirmodel.getPath(), 96, 160);
+
+
+
+        String outPutFileEnding = "txt";
+        
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+        
 
         IndexedReader records = new IndexedReader(bCodeDetectionPath);
 
