@@ -72,7 +72,6 @@ public class Predictor {
 		System.out.println("- geometry.min.distance   minimum distance between the geometrically predicted");
 		System.out.println("                          centers of the head of two potential interaction");
 		System.out.println("                          partners");
-		System.out.println("- image.filename          input image file");
 		System.out.println("- image.list.file         plain text file listing on each line one input image");
 		System.out.println("                          file.");
 		System.out.println("- show.credits            set to \"true\" or 1 to display credits and exit");
