@@ -71,7 +71,7 @@ public class Predictor {
 		System.out.println("- geometry.min.distance   minimum distance between the geometrically predicted");
 		System.out.println("                          centers of the head of two potential interaction");
 		System.out.println("                          partners");
-		System.out.println("- image.list.file         plain text file listing on each line one input image");
+		System.out.println("- input.file              the input image or plain text file");
 		System.out.println("                          file.");
 		System.out.println("- show.credits            set to \"true\" or 1 to display credits and exit");
 		System.out.println();
@@ -80,9 +80,9 @@ public class Predictor {
 		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.");
 		System.out.println();
 		System.out.println("Parameters image.filename and trophallaxis.file cannot be specified in");
-		System.out.println("conjunction with the image.list.file parameter.");
+		System.out.println("conjunction with the input.file parameter.");
 		System.out.println();
-		System.out.println("If the image.list.file parameter is given, trophallaxis output file names are");
+		System.out.println("If the input.file parameter is given, trophallaxis output file names are");
 		System.out.println("constructed by replacing the input image file extension with 'txt'. Input");
 		System.out.println("image file name and extension must be separated by a dot.");
 	}
@@ -283,10 +283,10 @@ public class Predictor {
         int geometryMaxDistance = parameters.getInteger("geometry.max.distance"); // 140
         int geometryMinDistance = parameters.getInteger("geometry.min.distance"); // 0
         String bCodeDetectionPath = parameters.getString("filtered.data.file");
-        String imagesFile = parameters.getString("image.list.file");
+        String inputFile = parameters.getString("input.file");
         
 		// map input files to output files
-		HashMap<String, String> ioMap = mapInputToOutput(imagesFile);
+		HashMap<String, String> ioMap = mapInputToOutput(inputFile);
 
 		// process input files
         processInputFiles(ioMap, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum, bCodeDetectionPath);
