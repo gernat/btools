@@ -8,16 +8,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
 
 import edu.illinois.gernat.btools.behavior.trophallaxis.Contact;
 import edu.illinois.gernat.btools.behavior.trophallaxis.TrophallaxisDetector;
@@ -106,13 +104,13 @@ public class Predictor {
 	{
 		
 		// extract CNN model
-		URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
-        File file = File.createTempFile("trophallaxis_detector", ".pb");
-        file.deleteOnExit();
-        FileUtils.copyURLToFile(url, file);
+		InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+		File target = File.createTempFile("trophallaxis_detector", ".pb");
+		target.deleteOnExit();
+		Files.copy(source, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
         
         // return CNN
-        return(new NeuralNetwork(file.getPath(), 96, 160));
+        return(new NeuralNetwork(target.getPath(), 96, 160));
         
 	}
 	
