@@ -8,18 +8,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.file.Files;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.bytedeco.javacv.FrameGrabber.Exception;
 
 import edu.illinois.gernat.btools.behavior.trophallaxis.Contact;
 import edu.illinois.gernat.btools.behavior.trophallaxis.TrophallaxisDetector;
@@ -28,8 +27,10 @@ import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.P
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.TrophallaxisProcessor;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.MyLookUpOp;
 import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.TrophaROI;
+import edu.illinois.gernat.btools.common.image.Images;
 import edu.illinois.gernat.btools.common.io.record.IndexedReader;
 import edu.illinois.gernat.btools.common.io.record.Record;
+import edu.illinois.gernat.btools.common.io.token.TokenWriter;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
 import edu.illinois.gernat.btools.common.parameters.Tuple;
 import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
@@ -41,8 +42,6 @@ public class Predictor {
 	
 	private static final String THIRD_PARTY_LICENSES_FILE = "trophallaxis_detector_3rd_party_licenses.txt";
 	
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
-
 	private static void showVersionAndCopyright() 
 	{
 		System.out.println("Trophallaxis Detector (bTools) 0.16.0");
@@ -105,7 +104,162 @@ public class Predictor {
 		System.exit(1);
 	}
 	
-    public static void main(String[] args) throws IOException 
+	private static NeuralNetwork createCNN(String filename) throws IOException 
+	{
+		
+		// extract CNN model
+		URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
+        File file = File.createTempFile("trophallaxis_detector", ".pb");
+        file.deleteOnExit();
+        FileUtils.copyURLToFile(url, file);
+        
+        // return CNN
+        return(new NeuralNetwork(file.getPath(), 96, 160));
+        
+	}
+	
+	private static void processInputFiles(HashMap<String, String> ioMap, int distanceLabelHead, int geometryMinDistance, int geometryMaxDistance, double geometryMaxAngleSum, String bCodeDetectionPath) throws IOException, ParseException
+	{
+		
+        // create CNNs
+        NeuralNetwork occurenceDetector = createCNN("trophallaxis_occurrence_model.pb");
+        NeuralNetwork directionDetector = createCNN("trophallaxis_direction_model.pb");
+
+        // open bCode reader 
+        IndexedReader indexedReader = new IndexedReader(bCodeDetectionPath);
+
+        // create an image processor for extracting the image region between
+        // the heads of potential trophallaxis partners from a hive image
+        PairProcessor roiExtractor = new TrophallaxisProcessor(null, null);
+        roiExtractor.setRoiCalculator(new TrophaROI(96, 160));
+        roiExtractor.addManipulator(new MyLookUpOp((short) 200));
+		
+		// iterate over input files
+		for (String inputFilename : ioMap.keySet())
+		{
+
+			// delete output file, if it exists
+			String outputFilename = ioMap.get(inputFilename);
+			File outputFile = new File(outputFilename);
+			Files.deleteIfExists(outputFile.toPath());
+			
+			// detect trophallaxis in input file
+			List<Detection> trophallaxisDetectionResults = null;
+			try
+			{
+				long timestamp = Images.getTimestampFromFilename(inputFilename);
+				List<Record> bCodeDetections = indexedReader.readThis(timestamp);
+				trophallaxisDetectionResults = processImage(inputFilename, timestamp, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum, bCodeDetections, roiExtractor, occurenceDetector, directionDetector);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				System.err.println("Caused by file: " + inputFilename);
+				continue;
+			}
+			
+			// write trophallaxis detections to file 
+			TokenWriter writer = new TokenWriter(outputFilename);
+			for (Detection detection : trophallaxisDetectionResults) writer.writeTokens(detection); 
+			writer.close();
+			
+		}	
+		
+		// close bCode reader 
+        indexedReader.close();
+		
+	}
+	
+	private static LabeledBee createLabeledBee(int ID, List<Record> bCodeDetections)
+	{
+		
+		// find record of specified bee
+		Record bee = null;
+		for (Record record : bCodeDetections) 
+		{
+			if (record.id == ID)
+			{
+				bee = record;
+				break;
+			}
+		}
+
+		// get corners of the bee's barcode
+        MetaCode metaID = MetaCode.createFrom(bee);
+        float[] corners = metaID.calculateBoundingBoxCoordinates();
+        for (int i = 1; i < corners.length; i = i + 2) corners[i] = -corners[i];
+        
+        // return new labeled bee
+        return new LabeledBee(bee.id, bee.center.x, -bee.center.y, bee.orientation.dx, -bee.orientation.dy, 0, corners);
+        
+	}
+	
+	private static List<Detection> processImage(String inputFilename, long timestamp, int distanceLabelHead, int geometryMinDistance, int geometryMaxDistance, double geometryMaxAngleSum, List<Record> bCodeDetections, PairProcessor roiExtractor, NeuralNetwork trophaPredictor, NeuralNetwork directionPredictor) throws IOException, ParseException
+	{
+		
+        // read input image
+        BufferedImage greatImage = null;
+        greatImage = ImageIO.read(new File(inputFilename));
+        
+        // convert input image to grayscale, if necessary
+        if (greatImage.getType() != BufferedImage.TYPE_BYTE_GRAY) 
+        {
+            BufferedImage image = new BufferedImage(greatImage.getWidth(), greatImage.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            Graphics g = image.getGraphics();
+            g.drawImage(greatImage, 0, 0, null);
+            g.dispose();
+            greatImage = image;
+        }
+        
+        // generate candidate trophallaxis detections based on the bees' 
+        // position an orientation relative to each other; return empty 
+        // list if there are none
+        LinkedList<Detection> trophallaxisDetections = new LinkedList<Detection>();
+        List<Contact> contacts = TrophallaxisDetector.predictContacts(bCodeDetections, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum);
+        if (contacts.isEmpty()) return trophallaxisDetections;
+        
+        // for each candidate detection, extract rectangular image region 
+        // showing the heads the two bees and space between the heads 
+        BufferedImage[] rois = new BufferedImage[contacts.size()];
+        for (int i = 0; i < contacts.size(); ++i) 
+        {
+            Contact bees = contacts.get(i);
+            LabeledBee curBee1 = createLabeledBee(bees.id1, bCodeDetections);
+            LabeledBee curBee2 = createLabeledBee(bees.id2, bCodeDetections);
+            rois[i] = roiExtractor.processSingle(greatImage, Tuple.of(curBee1, curBee2));
+        }
+
+        // for all ROIs, obtain probability of trophallaxis and the  
+        // probability that bee 1 is the donor  
+        float[] occurenceProbabilities = trophaPredictor.predict(rois); 
+        float[] bee1DonorProbabilities = directionPredictor.predict(rois); 
+
+        // return trophallaxis detections
+        for (int i = 0; i < contacts.size(); i++) trophallaxisDetections.add(new Detection(timestamp, contacts.get(i).id1, contacts.get(i).id2, occurenceProbabilities[i], bee1DonorProbabilities[i]));
+        return trophallaxisDetections;
+
+	}
+	
+	private static HashMap<String, String> mapInputToOutput(String inputFilename) throws IOException
+	{
+		HashMap<String, String> ioMap = new HashMap<>(); 
+		if (!inputFilename.endsWith(".txt")) queueInputFile(ioMap, inputFilename);
+		else
+		{
+			BufferedReader reader = new BufferedReader(new FileReader(inputFilename));
+			while (reader.ready()) queueInputFile(ioMap, reader.readLine());
+			reader.close();	
+		}
+		return ioMap;
+	}
+
+	private static void queueInputFile(HashMap<String, String> ioMap, String inputFilename)
+	{
+		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
+		else throw new IllegalStateException("Trophallaxis detector: unsupported input file extension");
+	}
+	
+    public static void main(String[] args) throws IOException, ParseException 
     {
     	
 		// show version, copyright, and usage information if no arguments were 
@@ -133,189 +287,12 @@ public class Predictor {
         String bCodeDetectionPath = parameters.getString("filtered.data.file");
         String imagesFile = parameters.getString("image.list.file");
         
-        // queue input files
-        String[] imagesList;
-        if (imagesFile.endsWith(".txt")) {
-            imagesList = parseFile(imagesFile);
-        } else {
-            imagesList = new String[]{imagesFile};
-        }  
-        
-        // extract CNN models
-        File trFolder = Files.createTempDirectory("tropha").toFile();
-        trFolder.deleteOnExit();
-        URL trmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_occurrence_model.pb");
-        File trmodel = File.createTempFile("trmodel",".pb",trFolder);
-        trmodel.deleteOnExit();
-        FileUtils.copyURLToFile(trmodelJAR,trmodel);
-        File dirFolder = Files.createTempDirectory("direction").toFile();
-        dirFolder.deleteOnExit();
-        URL dirmodelJAR = Thread.currentThread().getContextClassLoader().getResource("trophallaxis_direction_model.pb");
-        File dirmodel = File.createTempFile("dirmodel",".pb",dirFolder);
-        dirmodel.deleteOnExit();
-        FileUtils.copyURLToFile(dirmodelJAR,dirmodel);
+		// map input files to output files
+		HashMap<String, String> ioMap = mapInputToOutput(imagesFile);
 
-        // create CNNs
-        NeuralNetwork trophaPredictor = new NeuralNetwork(trmodel.getPath(), 96, 160);
-        NeuralNetwork directionPredictor = new NeuralNetwork(dirmodel.getPath(), 96, 160);
-
-
-
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        
-
-        IndexedReader records = new IndexedReader(bCodeDetectionPath);
-
-        PairProcessor processor = new TrophallaxisProcessor(null, null);
-
-        processor.setRoiCalculator(new TrophaROI(96, 160));
-        processor.addManipulator(new MyLookUpOp((short) 200));
-
-        // iterate through all hive images
-        for (String imagePath : imagesList) {
-            String imageName = imagePath.substring(0, imagePath.lastIndexOf("."));
-            try {
-                Files.deleteIfExists(new File(imageName + ".txt").toPath());
-            } catch (Exception e) {
-                System.err.println("Can't read/write from/to disk.");
-                System.err.println(imagePath);
-                e.printStackTrace();
-                continue;
-            }
-            BufferedImage greatImage = null;
-            try {
-                greatImage = ImageIO.read(new File(imagePath));
-                if (greatImage.getType() != BufferedImage.TYPE_BYTE_GRAY) {
-                    BufferedImage image = new BufferedImage(greatImage.getWidth(), greatImage.getHeight(),
-                            BufferedImage.TYPE_BYTE_GRAY);
-                    Graphics g = image.getGraphics();
-                    g.drawImage(greatImage, 0, 0, null);
-                    g.dispose();
-                    greatImage = image;
-                }
-            } catch (IOException e) {
-                System.err.println("Couldn't read image file.");
-                System.err.println(imagePath);
-                e.printStackTrace();
-                continue;
-            }
-            long timestamp = 0;
-            try {
-                timestamp = DATE_FORMAT.parse(imageName.substring(imageName.lastIndexOf('/') + 1)).getTime();
-            } catch (ParseException e) {
-                System.err.println("Couldn't convert readable timestamp to unix timestamp.");
-                System.err.println(imagePath);
-                e.printStackTrace();
-                continue;
-            }
-
-            List<Record> imageBees = records.readThis(timestamp);
-
-            // check if records available
-            if (imageBees == null || imageBees.isEmpty()) {
-                new File(imageName + ".txt").createNewFile();
-                continue;
-            }
-
-            List<Contact> contacts = TrophallaxisDetector.predictContacts(imageBees, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum);
-
-            // check if there are at least one pair with contact
-            if (contacts.isEmpty()) {
-                new File(imageName + ".txt").createNewFile();
-                continue;
-            }
-            
-            BufferedImage[] smallImages = new BufferedImage[contacts.size()];
-            // iterate over all detected bCods in the hive image
-            for (int i = 0; i < contacts.size(); ++i) {
-                Contact bees = contacts.get(i);
-                Record imageBee1 = null;
-                MetaCode mID1 = null;
-                try {
-                    imageBee1 = records.readRecord(timestamp, bees.id1);
-                    mID1 = MetaCode.createFrom(imageBee1);
-                } catch (NullPointerException e) {
-                    System.err.println("Couldn't match record for given timestamp and id");
-                    System.err.println(imagePath);
-                    System.err.println(timestamp + " " + imageBee1.id + " " + imageBee1.center);
-                    e.printStackTrace();
-                    continue;
-                }
-                Record imageBee2 = null;
-                MetaCode mID2 = null;
-                try {
-                    imageBee2 = records.readRecord(timestamp, bees.id2);
-                    mID2 = MetaCode.createFrom(imageBee2);
-                } catch (NullPointerException e) {
-                    System.err.println("Couldn't match record for given timestamp and id");
-                    System.err.println(imagePath);
-                    System.err.println(timestamp + " " + imageBee2.id + " " + imageBee1.center);
-                    e.printStackTrace();
-                    continue;
-                }
-                float[] corners1 = mID1.calculateBoundingBoxCoordinates();
-                float[] corners2 = mID2.calculateBoundingBoxCoordinates();
-                // convert image coordinates to world coordinates
-                switchCoordinates(corners1); 
-                switchCoordinates(corners2); 
-                LabeledBee curBee1 = new LabeledBee(imageBee1.id, imageBee1.center.x, -imageBee1.center.y, imageBee1.orientation.dx, -imageBee1.orientation.dy, 0, corners1);
-                LabeledBee curBee2 = new LabeledBee(imageBee2.id, imageBee2.center.x, -imageBee2.center.y, imageBee2.orientation.dx, -imageBee2.orientation.dy, 0, corners2);
-                smallImages[i] = processor.processSingle(greatImage, Tuple.of(curBee1, curBee2));
-            }
-
-            // predict small images with the neural network
-            float[] res1; 
-            float[] res2; 
-            try {
-                res1 = trophaPredictor.predict(smallImages);
-                res2 = directionPredictor.predict(smallImages);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.err.println("Number of images and output array length did not match.");
-                System.err.println(imagePath);
-                e.printStackTrace();
-                continue;
-            }
-
-            // write output
-            PrintWriter outputWriter = new PrintWriter(new File(imageName + ".txt"));
-            for (int i = 0; i < res1.length; i++) {
-                outputWriter.println(timestamp + "," + contacts.get(i).id1 + "," + contacts.get(i).id2 + "," + res1[i] + "," + res2[i]);
-            }
-            outputWriter.close();
-
-        }
+		// process input files
+        processInputFiles(ioMap, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum, bCodeDetectionPath);
 
     }
 
-    /**
-     * Reads a File with paths to images (per line) into an array.
-     *
-     * @param imagesFile absolute path to a file containing paths to images.
-     * @return a array containing all paths in the file linewise.
-     */
-    private static String[] parseFile(String imagesFile) throws IOException {
-        List<String> lines = new LinkedList<String>();
-        BufferedReader br = new BufferedReader(new FileReader(imagesFile));
-        String line;
-        while ((line = br.readLine()) != null) {
-            lines.add(line);
-        }
-        br.close();
-        return lines.toArray(new String[lines.size()]);
-    }
-
-    /**
-     * By definition every even index of the vector in corners have the x values ad the odds are the
-     * y values. To switch the coordinates, all y values need to multiplied with -1.
-     *
-     * @param corners vector, that describes the boundingbox of a bCode. Can be created with the
-     *                method MetaID.calculateBoundingBoxCoordinates()
-     * @return the reference of the vector with the inline switched coordinates.
-     */
-    private static float[] switchCoordinates(float[] corners) {
-        for (int i = 1; i < corners.length; i = i + 2) {
-            corners[i] = -corners[i];
-        }
-        return corners;
-    }
 }
