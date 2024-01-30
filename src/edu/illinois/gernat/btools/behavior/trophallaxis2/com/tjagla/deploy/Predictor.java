@@ -73,7 +73,7 @@ public class Predictor {
 		System.out.println("                            predicted centers of the head of two potential");
 		System.out.println("                            interaction partners");
 		System.out.println("- image.filename            input image file");
-		System.out.println("- image.list.filename       plain text file listing on each line one input");
+		System.out.println("- image.list.file           plain text file listing on each line one input");
 		System.out.println("                            image file.");
 		System.out.println("- show.credits              set to \"true\" or 1 to display credits and exit");
 		System.out.println();
@@ -82,9 +82,9 @@ public class Predictor {
 		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.");
 		System.out.println();
 		System.out.println("Parameters image.filename and trophallaxis.file cannot be specified in");
-		System.out.println("conjunction with the image.list.filename parameter.");
+		System.out.println("conjunction with the image.list.file parameter.");
 		System.out.println();
-		System.out.println("If the image.list.filename parameter is given, trophallaxis output file names");
+		System.out.println("If the image.list.file parameter is given, trophallaxis output file names");
 		System.out.println("are constructed by replacing the input image file extension with 'txt'. Input");
 		System.out.println("image file name and extension must be separated by a dot.");
 	}
