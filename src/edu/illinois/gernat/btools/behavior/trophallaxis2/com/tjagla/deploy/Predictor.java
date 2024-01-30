@@ -18,7 +18,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-import org.bytedeco.javacv.FrameGrabber.Exception;
 
 import edu.illinois.gernat.btools.behavior.trophallaxis.Contact;
 import edu.illinois.gernat.btools.behavior.trophallaxis.TrophallaxisDetector;
