@@ -44,6 +44,7 @@ import edu.illinois.gernat.btools.behavior.trophallaxis.head.Head;
 import edu.illinois.gernat.btools.behavior.trophallaxis.head.HeadDetector;
 import edu.illinois.gernat.btools.behavior.trophallaxis.touch.Touch;
 import edu.illinois.gernat.btools.behavior.trophallaxis.touch.TouchDetector;
+import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.Contact;
 import edu.illinois.gernat.btools.common.geometry.Coordinate;
 import edu.illinois.gernat.btools.common.geometry.Vector;
 import edu.illinois.gernat.btools.common.image.Images;
