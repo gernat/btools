@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 University of Illinois Board of Trustees.
+ * Copyright (C) 2023, 2024 University of Illinois Board of Trustees.
  *
  * This file is part of bTools.
  *
@@ -84,7 +84,7 @@ public class FlightActivityDetector
 		String entranceEventsFile = parameters.getString("entrance.events.file");
 
 		// validate arguments
-		if (frameRate != EXPECTED_FRAME_RATE) throw new IllegalStateException("The random forest expects a frame rate of " + EXPECTED_FRAME_RATE + "Hz.");
+		if (frameRate != EXPECTED_FRAME_RATE) throw new IllegalStateException("The random forest expects a frame rate of " + EXPECTED_FRAME_RATE + " Hz.");
 		
 		// predict feeding events
 		List<Feature> features = computeFeatures(bCodeDetectionsFile, frameRate);
@@ -219,8 +219,8 @@ public class FlightActivityDetector
 	
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("Flight Activity Detector (bTools) 0.16.0");
-		System.out.println("Copyright (C) 2017-2023 University of Illinois Board of Trustees");
+		System.out.println("Flight Activity Detector (bTools) 0.17.0");
+		System.out.println("Copyright (C) 2017-2024 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
@@ -233,8 +233,8 @@ public class FlightActivityDetector
 		System.out.println();  		
 		System.out.println("Parameters:");
 		System.out.println("- entrance.events.file output file containing detected entrance events");
-		System.out.println("- filtered.data.file   file containing the bCode detection results. Must be sorted");		
-		System.out.println("                       by timestamp column");
+		System.out.println("- filtered.data.file   file containing the bCode detection results. Must be");		
+		System.out.println("                       sorted by timestamp column");
 		System.out.println("- frame.rate           frame rate at which bCodes were recorded");
 		System.out.println("- show.credits         set to \"true\" or 1 to display credits and exit");
 	}

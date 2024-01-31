@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017, 2018, 2019, 2020, 2021, 2022, 2023 University of  
+ * Copyright (C) 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 University of  
  * Illinois Board of Trustees.
  *
  * This file is part of bTools.
@@ -136,8 +136,8 @@ public class BCodeDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("bCode Detector (bTools) 0.16.0");
-		System.out.println("Copyright (C) 2017-2023 University of Illinois Board of Trustees");
+		System.out.println("bCode Detector (bTools) 0.17.0");
+		System.out.println("Copyright (C) 2017-2024 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
 		System.out.println("There is NO WARRANTY, to the extent permitted by law.");
@@ -168,8 +168,8 @@ public class BCodeDetector
 		System.out.println("- show.credits              set to \"true\" or 1 to display credits and exit");
 		System.out.println();
 		System.out.println("Notes:");
-		System.out.println("If the input.file is a plain text file, this file must list one image or.");
-		System.out.println("video file per line");
+		System.out.println("If the input.file is a plain text file, this file must list one image or");
+		System.out.println("video file per line.");
 		System.out.println("");
 		System.out.println("Image and video file names need to be a valid date in the format");
 		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS. File name and extension must be separated by a dot.");
