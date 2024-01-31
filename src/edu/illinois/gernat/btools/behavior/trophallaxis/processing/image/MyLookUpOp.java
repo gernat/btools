@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image;
+package edu.illinois.gernat.btools.behavior.trophallaxis.processing.image;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.LookupOp;

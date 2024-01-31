@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.deploy;
+package edu.illinois.gernat.btools.behavior.trophallaxis;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -18,12 +18,11 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.Contact;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.PairProcessor;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.TrophallaxisProcessor;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.MyLookUpOp;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.TrophaROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.PairProcessor;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.TrophallaxisProcessor;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.MyLookUpOp;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi.TrophaROI;
 import edu.illinois.gernat.btools.common.geometry.Coordinate;
 import edu.illinois.gernat.btools.common.geometry.Vector;
 import edu.illinois.gernat.btools.common.image.Images;
@@ -37,7 +36,7 @@ import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
 /**
  * Created by tobias on 10.12.16.
  */
-public class Predictor {
+public class Detector {
 	
 	private static final String THIRD_PARTY_LICENSES_FILE = "trophallaxis_detector_3rd_party_licenses.txt";
 	

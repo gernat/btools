@@ -17,7 +17,7 @@
  * along with bTools. If not, see http://www.gnu.org/licenses/.
  */
 
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla;
+package edu.illinois.gernat.btools.behavior.trophallaxis;
 
 import edu.illinois.gernat.btools.common.io.token.Tokenizable;
 

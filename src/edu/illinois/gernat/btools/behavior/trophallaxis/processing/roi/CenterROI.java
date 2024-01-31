@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi;
+package edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi;
 
 import edu.illinois.gernat.btools.common.geometry.Coordinate;
 

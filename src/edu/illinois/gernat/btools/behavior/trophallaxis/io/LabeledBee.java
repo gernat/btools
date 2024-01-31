@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io;
+package edu.illinois.gernat.btools.behavior.trophallaxis.io;
 
 
 /**

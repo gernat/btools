@@ -1,16 +1,16 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing;
+package edu.illinois.gernat.btools.behavior.trophallaxis.processing;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Map;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.read.ImageSource;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.write.TrophallaxisWriter;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.Operator;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.CenterROI;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.PairROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.read.ImageSource;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.write.TrophallaxisWriter;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.Operator;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi.CenterROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi.PairROI;
 import edu.illinois.gernat.btools.common.parameters.Tuple;
 
 /**

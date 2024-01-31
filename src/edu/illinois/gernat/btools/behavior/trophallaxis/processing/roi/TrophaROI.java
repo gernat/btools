@@ -1,6 +1,6 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi;
+package edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.LabeledBee;
 import edu.illinois.gernat.btools.common.geometry.Coordinate;
 import edu.illinois.gernat.btools.common.geometry.Vector;
 import edu.illinois.gernat.btools.common.parameters.Tuple;

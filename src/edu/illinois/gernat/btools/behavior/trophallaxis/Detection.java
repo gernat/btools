@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.deploy;
+package edu.illinois.gernat.btools.behavior.trophallaxis;
 
 import edu.illinois.gernat.btools.common.io.token.Tokenizable;
 
