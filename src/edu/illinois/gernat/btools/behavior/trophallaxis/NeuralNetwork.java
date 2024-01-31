@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.deploy;
+package edu.illinois.gernat.btools.behavior.trophallaxis;
 
 import org.tensorflow.Graph;
 import org.tensorflow.Session;

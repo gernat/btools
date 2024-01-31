@@ -1,14 +1,14 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing;
+package edu.illinois.gernat.btools.behavior.trophallaxis.processing;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.read.ImageSource;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.write.TrophallaxisWriter;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.CenterROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.read.ImageSource;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.write.TrophallaxisWriter;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi.CenterROI;
 import edu.illinois.gernat.btools.common.geometry.Coordinate;
 import edu.illinois.gernat.btools.common.geometry.Vector;
 import edu.illinois.gernat.btools.common.parameters.Tuple;

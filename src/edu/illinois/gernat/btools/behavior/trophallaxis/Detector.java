@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.deploy;
+package edu.illinois.gernat.btools.behavior.trophallaxis;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -11,19 +11,20 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis.Contact;
-import edu.illinois.gernat.btools.behavior.trophallaxis.TrophallaxisDetector;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.PairProcessor;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.TrophallaxisProcessor;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.image.MyLookUpOp;
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.processing.roi.TrophaROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.PairProcessor;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.TrophallaxisProcessor;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.MyLookUpOp;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.roi.TrophaROI;
+import edu.illinois.gernat.btools.common.geometry.Coordinate;
+import edu.illinois.gernat.btools.common.geometry.Vector;
 import edu.illinois.gernat.btools.common.image.Images;
 import edu.illinois.gernat.btools.common.io.record.IndexedReader;
 import edu.illinois.gernat.btools.common.io.record.Record;
@@ -35,10 +36,49 @@ import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
 /**
  * Created by tobias on 10.12.16.
  */
-public class Predictor {
+public class Detector {
 	
 	private static final String THIRD_PARTY_LICENSES_FILE = "trophallaxis_detector_3rd_party_licenses.txt";
 	
+	public static boolean isContact(Coordinate headCenter1, Coordinate headCenter2, Vector orientation1, Vector orientation2, int minDistance, int maxDistance, double maxAngleSum)
+	{
+
+		// return true iff the distance between head center is within the
+		// specified range and the sum of the angles between a line connecting
+		// the head centers and the specified orientation vectors is smaller
+		// than the specified threshold
+		float distance = headCenter1.distanceTo(headCenter2);
+		if ((distance < minDistance) || (distance > maxDistance)) return false;
+		float angle1 = Math.abs(new Vector(headCenter1, headCenter2).angleBetween(orientation1));
+		if (angle1 > maxAngleSum) return false;
+		float angle2 = Math.abs(new Vector(headCenter2, headCenter1).angleBetween(orientation2));
+		if (angle1 + angle2 > maxAngleSum) return false;
+		return true;
+		
+	}
+
+	public static List<Contact> predictContacts(List<Record> records, int distanceLabelHead, int geometryMinDistance, int geometryMaxDistance, double geometryMaxAngleSum)
+	{
+		
+		// create contact for each pair of bees that meets the specified 
+		// requirements  
+		ArrayList<Contact> contacts = new ArrayList<Contact>();
+		int recordCount = records.size();
+		for (int i = 0; i < recordCount; i++)
+		{
+			Record record1 = records.get(i);
+			Coordinate headCenter1 = record1.orientation.clone().scale(distanceLabelHead).terminal(record1.center);
+			for (int j = i + 1; j < recordCount; j++)
+			{
+				Record record2 = records.get(j);
+				Coordinate headCenter2 = record2.orientation.clone().scale(distanceLabelHead).terminal(record2.center);
+				if (isContact(headCenter1, headCenter2, record1.orientation, record2.orientation, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum)) contacts.add(new Contact(record1.timestamp, record1.id, record2.id));
+			}
+		}
+		return contacts;
+
+	}
+
 	private static void showVersionAndCopyright() 
 	{
 		System.out.println("Trophallaxis Detector (bTools) 0.16.0");
@@ -211,7 +251,7 @@ public class Predictor {
         // position an orientation relative to each other; return empty 
         // list if there are none
         LinkedList<Detection> trophallaxisDetections = new LinkedList<Detection>();
-        List<Contact> contacts = TrophallaxisDetector.predictContacts(bCodeDetections, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum);
+        List<Contact> contacts = predictContacts(bCodeDetections, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum);
         if (contacts.isEmpty()) return trophallaxisDetections;
         
         // for each candidate detection, extract rectangular image region 

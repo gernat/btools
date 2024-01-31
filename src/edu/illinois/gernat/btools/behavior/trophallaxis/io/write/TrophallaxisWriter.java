@@ -1,8 +1,8 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.write;
+package edu.illinois.gernat.btools.behavior.trophallaxis.io.write;
 
 import java.awt.image.BufferedImage;
 
-import edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.LabeledBee;
 import edu.illinois.gernat.btools.common.parameters.Tuple;
 
 

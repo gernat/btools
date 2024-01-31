@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.trophallaxis2.com.tjagla.io.read;
+package edu.illinois.gernat.btools.behavior.trophallaxis.io.read;
 
 import java.awt.image.BufferedImage;
 
