@@ -165,7 +165,7 @@ public class Predictor {
         while ((line = br.readLine()) != null) {
             lines.add(line);
         }
-
+        br.close();
         return lines.toArray(new String[lines.size()]);
     }
 
