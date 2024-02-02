@@ -45,24 +45,24 @@ public class Predictor {
 
         File s1Folder = Files.createTempDirectory("s1_01").toFile();
         s1Folder.deleteOnExit();
-        URL s1ckptJAR = Predictor.class.getResource("/s1_01/model.ckpt");
+        URL s1ckptJAR = Predictor.class.getResource("/egg-laying_abdomen_model.ckpt");
         File s1ckpt = File.createTempFile("s1model",".ckpt",s1Folder);
         s1ckpt.deleteOnExit();
         FileUtils.copyURLToFile(s1ckptJAR,s1ckpt);
 
-        URL s1modelJAR = Predictor.class.getResource("/s1_01/trained_model.proto");
+        URL s1modelJAR = Predictor.class.getResource("/egg-laying_abdomen_model.proto");
         File s1model = File.createTempFile("s1model",".proto",s1Folder);
         s1model.deleteOnExit();
         FileUtils.copyURLToFile(s1modelJAR,s1model);
 
         File s2Folder = Files.createTempDirectory("s2_02").toFile();
         s2Folder.deleteOnExit();
-        URL s2ckptJAR = Predictor.class.getResource("/s2_00/model.ckpt");
+        URL s2ckptJAR = Predictor.class.getResource("/egg-laying_whole-bee_model.ckpt");
         File s2ckpt = File.createTempFile("s2model",".ckpt",s2Folder);
         s2ckpt.deleteOnExit();
         FileUtils.copyURLToFile(s2ckptJAR,s2ckpt);
 
-        URL s2modelJAR = Predictor.class.getResource("/s2_00/trained_model.proto");
+        URL s2modelJAR = Predictor.class.getResource("/egg-laying_whole-bee_model.proto");
         File s2model = File.createTempFile("s2model",".proto",s2Folder);
         s2model.deleteOnExit();
         FileUtils.copyURLToFile(s2modelJAR,s2model);
