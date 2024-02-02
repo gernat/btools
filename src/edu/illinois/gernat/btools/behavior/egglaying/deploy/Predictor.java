@@ -26,7 +26,9 @@ import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.DiagonalBee;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.LowerEdgeROI;
 import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.MyLookUpOp;
 import edu.illinois.gernat.btools.common.io.record.IndexedReader;
+import edu.illinois.gernat.btools.common.io.record.Record;
 import edu.illinois.gernat.btools.common.parameters.Parameters;
+import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
 
 /**
  * Created by tobias on 10.12.16.
@@ -130,9 +132,9 @@ public class Predictor {
             // iterate over all detected bCods in the hive image
             for (int i = 0; i < imageBees.size(); ++i) {
                 Record imageBee = imageBees.get(i);
-                MetaID mID = null;
+                MetaCode mID = null;
                 try {
-                    mID = Record.createMetaIDFrom(imageBee);
+                    mID = MetaCode.createFrom(imageBee);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                     System.out.println(imageName);
