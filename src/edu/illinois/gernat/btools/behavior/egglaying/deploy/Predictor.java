@@ -37,7 +37,6 @@ public class Predictor {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
 
     public static void main(String[] args) throws IOException {
-//        long startTime = System.currentTimeMillis();
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         // parse command line arguments
@@ -55,7 +54,6 @@ public class Predictor {
         File s1model = File.createTempFile("s1model",".proto",s1Folder);
         s1model.deleteOnExit();
         FileUtils.copyURLToFile(s1modelJAR,s1model);
-//        String netDefPath1st = parameters.getString("network.model.file.1");
 
         File s2Folder = Files.createTempDirectory("s2_02").toFile();
         s2Folder.deleteOnExit();
@@ -68,16 +66,10 @@ public class Predictor {
         File s2model = File.createTempFile("s2model",".proto",s2Folder);
         s2model.deleteOnExit();
         FileUtils.copyURLToFile(s2modelJAR,s2model);
-//        String netDefPath2nd = parameters.getString("network.model.file.2");
 
-        // network.definition.folder=/home/tobias/data/Persoenliche_Daten/Docs/work/robionsonLab/egg_laying_worker/tensorflow/server/logs/great_nets/2016-12-12_12-29-17-0/1/
         String bCodeDetectionPath = parameters.getString("filtered.data.file");
-        // bCode.detection.file=/home/tobias/data/Persoenliche_Daten/Docs/work/robionsonLab/egg_laying_worker/data/all/raw_bcode_detection_results.txt
-//        String outputPath = parameters.getString("output.path");
         String imagesFile = parameters.getString("image.list.file");
-        // image.file=/home/tobias/data/Persoenliche_Daten/Docs/work/robionsonLab/egg_laying_worker/data/First_training_set/2016-06-01-10-00-00-763.jpg
         String outPutFileEnding = "txt";
-        // output.file.ending=n2_02
 
         // check image source
         String[] imagesList;
@@ -158,7 +150,6 @@ public class Predictor {
             }
             outputWriter.close();
         }
-//        System.out.println("duration: "+(System.currentTimeMillis()-startTime)+"ms");
     }
 
     /**

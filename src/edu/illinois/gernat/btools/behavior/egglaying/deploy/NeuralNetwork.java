@@ -33,13 +33,6 @@ public class NeuralNetwork {
     private final Session session;
 
     public NeuralNetwork(String modelName, String checkpointName, int inputImageWidth, int inputImageHeight) {
-//        SessionOptions sO = new SessionOptions();
-//        tensorflow.ConfigProto cp = new tensorflow.ConfigProto();
-//        tensorflow.GPUOptions gpuO = new tensorflow.GPUOptions();
-//        gpuO.set_per_process_gpu_memory_fraction(0.7);
-//        cp.set_allocated_gpu_options(gpuO);
-//        sO.config(cp);
-//        this.session = new Session(sO);
 
         this.session = new Session(new SessionOptions());
 

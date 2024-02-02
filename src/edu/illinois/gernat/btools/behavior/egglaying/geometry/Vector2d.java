@@ -15,7 +15,6 @@ public class Vector2d extends Tuple2d {
     }
 
     public Vector2d rotateLeftHalfPi() {
-        //noinspection SuspiciousNameCombination
         return new Vector2d(-this.y, this.x);
     }
 
