@@ -1,14 +1,4 @@
-package com.tjagla.deploy;
-
-import com.tjagla.io.Bee;
-import com.tjagla.io.LabeledBee;
-import com.tjagla.processing.MyProcessor;
-import com.tjagla.processing.Processor;
-import com.tjagla.processing.image.MyLookUpOp;
-import com.tjagla.processing.roi.DiagonalBee;
-import com.tjagla.processing.roi.LowerEdgeROI;
-
-import org.apache.commons.io.FileUtils;
+package edu.illinois.gernat.btools.behavior.egglaying.deploy;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -26,10 +16,17 @@ import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 
-import name.timgernat.common.Parameters;
-import name.timgernat.common.io.record.IndexedReader;
-import name.timgernat.common.io.record.Record;
-import name.timgernat.image.matrixcode.MetaID;
+import org.apache.commons.io.FileUtils;
+
+import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
+import edu.illinois.gernat.btools.behavior.egglaying.io.LabeledBee;
+import edu.illinois.gernat.btools.behavior.egglaying.processing.MyProcessor;
+import edu.illinois.gernat.btools.behavior.egglaying.processing.Processor;
+import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.DiagonalBee;
+import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.LowerEdgeROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.MyLookUpOp;
+import edu.illinois.gernat.btools.common.io.record.IndexedReader;
+import edu.illinois.gernat.btools.common.parameters.Parameters;
 
 /**
  * Created by tobias on 10.12.16.

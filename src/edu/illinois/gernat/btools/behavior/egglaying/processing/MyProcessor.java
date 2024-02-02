@@ -1,14 +1,14 @@
-package com.tjagla.processing;
+package edu.illinois.gernat.btools.behavior.egglaying.processing;
 
-import com.tjagla.goemetry.Point2d;
-import com.tjagla.goemetry.ROI;
-import com.tjagla.io.read.ImageSource;
-import com.tjagla.io.write.OutputWriter;
-
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Point2d;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.io.write.OutputWriter;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.read.ImageSource;
 
 /**
  * Created by tobias on 27.09.16.

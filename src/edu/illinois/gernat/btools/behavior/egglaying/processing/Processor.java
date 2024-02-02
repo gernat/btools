@@ -1,16 +1,16 @@
-package com.tjagla.processing;
+package edu.illinois.gernat.btools.behavior.egglaying.processing;
 
-import com.tjagla.goemetry.ROI;
-import com.tjagla.io.Bee;
-import com.tjagla.io.read.ImageSource;
-import com.tjagla.io.write.OutputWriter;
-import com.tjagla.processing.image.Operator;
-import com.tjagla.processing.roi.ROICalculator;
-
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Map;
+
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
+import edu.illinois.gernat.btools.behavior.egglaying.io.write.OutputWriter;
+import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.ROICalculator;
+import edu.illinois.gernat.btools.behavior.trophallaxis.io.read.ImageSource;
+import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.Operator;
 
 /**
  * Created by tobias on 27.09.16.

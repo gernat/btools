@@ -1,10 +1,10 @@
-package com.tjagla.processing.roi;
+package edu.illinois.gernat.btools.behavior.egglaying.processing.roi;
 
-import com.tjagla.goemetry.Line2d;
-import com.tjagla.goemetry.Point2d;
-import com.tjagla.goemetry.ROI;
-import com.tjagla.goemetry.Vector2d;
-import com.tjagla.io.Bee;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Line2d;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Point2d;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Vector2d;
+import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 
 /**
  * Created by tobias on 02.10.16.

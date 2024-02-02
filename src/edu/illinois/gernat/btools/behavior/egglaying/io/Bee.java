@@ -1,7 +1,7 @@
-package com.tjagla.io;
+package edu.illinois.gernat.btools.behavior.egglaying.io;
 
-import com.tjagla.goemetry.Point2d;
-import com.tjagla.goemetry.Vector2d;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Point2d;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Vector2d;
 
 /**
  * Created by tobias on 29.09.16.

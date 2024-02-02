@@ -1,4 +1,4 @@
-package com.tjagla.goemetry;
+package edu.illinois.gernat.btools.behavior.egglaying.goemetry;
 
 /**
  * Created by tobias on 28.09.16.

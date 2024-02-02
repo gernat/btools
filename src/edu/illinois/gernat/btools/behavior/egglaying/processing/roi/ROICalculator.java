@@ -1,7 +1,7 @@
-package com.tjagla.processing.roi;
+package edu.illinois.gernat.btools.behavior.egglaying.processing.roi;
 
-import com.tjagla.goemetry.ROI;
-import com.tjagla.io.Bee;
+import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 
 /**
  * Created by tobias on 27.09.16.
