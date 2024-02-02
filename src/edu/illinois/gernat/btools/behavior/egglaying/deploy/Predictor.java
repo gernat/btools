@@ -5,9 +5,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -15,8 +16,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
 
 import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 import edu.illinois.gernat.btools.behavior.egglaying.io.LabeledBee;
@@ -45,27 +44,27 @@ public class Predictor {
 
         File s1Folder = Files.createTempDirectory("s1_01").toFile();
         s1Folder.deleteOnExit();
-        URL s1ckptJAR = Predictor.class.getResource("/egg-laying_abdomen_model.ckpt");
+        InputStream s1ckptJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_abdomen_model.ckpt");
         File s1ckpt = File.createTempFile("s1model",".ckpt",s1Folder);
         s1ckpt.deleteOnExit();
-        FileUtils.copyURLToFile(s1ckptJAR,s1ckpt);
+        Files.copy(s1ckptJAR, s1ckpt.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        URL s1modelJAR = Predictor.class.getResource("/egg-laying_abdomen_model.proto");
+        InputStream s1modelJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_abdomen_model.proto");
         File s1model = File.createTempFile("s1model",".proto",s1Folder);
         s1model.deleteOnExit();
-        FileUtils.copyURLToFile(s1modelJAR,s1model);
+        Files.copy(s1modelJAR, s1model.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         File s2Folder = Files.createTempDirectory("s2_02").toFile();
         s2Folder.deleteOnExit();
-        URL s2ckptJAR = Predictor.class.getResource("/egg-laying_whole-bee_model.ckpt");
+        InputStream s2ckptJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_whole-bee_model.ckpt");
         File s2ckpt = File.createTempFile("s2model",".ckpt",s2Folder);
         s2ckpt.deleteOnExit();
-        FileUtils.copyURLToFile(s2ckptJAR,s2ckpt);
+        Files.copy(s2ckptJAR, s2ckpt.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        URL s2modelJAR = Predictor.class.getResource("/egg-laying_whole-bee_model.proto");
+        InputStream s2modelJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_whole-bee_model.proto");
         File s2model = File.createTempFile("s2model",".proto",s2Folder);
         s2model.deleteOnExit();
-        FileUtils.copyURLToFile(s2modelJAR,s2model);
+        Files.copy(s2modelJAR, s2model.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         String bCodeDetectionPath = parameters.getString("filtered.data.file");
         String imagesFile = parameters.getString("image.list.file");
