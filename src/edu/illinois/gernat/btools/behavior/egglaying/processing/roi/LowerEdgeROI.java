@@ -1,9 +1,9 @@
 package edu.illinois.gernat.btools.behavior.egglaying.processing.roi;
 
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Line2d;
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Point2d;
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Vector2d;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.Line2d;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.Point2d;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.Vector2d;
 import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 
 /**

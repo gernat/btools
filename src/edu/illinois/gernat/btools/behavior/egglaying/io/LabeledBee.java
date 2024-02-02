@@ -1,7 +1,7 @@
 package edu.illinois.gernat.btools.behavior.egglaying.io;
 
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Point2d;
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Vector2d;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.Point2d;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.Vector2d;
 
 /**
  * Created by tobias on 21.09.16.

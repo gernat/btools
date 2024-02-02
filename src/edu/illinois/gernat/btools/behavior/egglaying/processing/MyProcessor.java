@@ -5,8 +5,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.Point2d;
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.Point2d;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.ROI;
 import edu.illinois.gernat.btools.behavior.egglaying.io.write.OutputWriter;
 import edu.illinois.gernat.btools.behavior.trophallaxis.io.read.ImageSource;
 

@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Map;
 
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.ROI;
 import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 import edu.illinois.gernat.btools.behavior.egglaying.io.write.OutputWriter;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.ROICalculator;

@@ -1,4 +1,4 @@
-package edu.illinois.gernat.btools.behavior.egglaying.goemetry;
+package edu.illinois.gernat.btools.behavior.egglaying.geometry;
 
 /**
  * Created by tobias on 28.09.16.

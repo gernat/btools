@@ -1,6 +1,6 @@
 package edu.illinois.gernat.btools.behavior.egglaying.processing.roi;
 
-import edu.illinois.gernat.btools.behavior.egglaying.goemetry.ROI;
+import edu.illinois.gernat.btools.behavior.egglaying.geometry.ROI;
 import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 
 /**
