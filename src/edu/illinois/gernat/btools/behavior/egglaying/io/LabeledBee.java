@@ -1,0 +1,105 @@
+package com.tjagla.io;
+
+
+import com.tjagla.goemetry.Point2d;
+import com.tjagla.goemetry.Vector2d;
+
+/**
+ * Created by tobias on 21.09.16.
+ */
+public class LabeledBee implements Bee {
+    private final int id;
+    private final float x;
+    private final float y;
+    private final float dx;
+    private final float dy;
+    private final int label;
+    private final float[] corners;
+    private Point2d upperLeftROI;
+    private double length;
+    private Vector2d relLowerEdgeMidPoint;
+    private String fname;
+
+    public LabeledBee(int id, float x, float y, float dx, float dy, int label) {
+        this(id, x, y, dx, dy, label, null);
+    }
+
+    public LabeledBee(int id, float x, float y, float dx, float dy, int label, float[] corners) {
+        this(id, x, y, dx, dy, label, corners, null);
+    }
+
+    public LabeledBee(int id, float x, float y, float dx, float dy, int label, float[] corners, String fname) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.label = label;
+        this.corners = corners;
+        this.fname = fname;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getDx() {
+        return dx;
+    }
+
+    public float getDy() {
+        return dy;
+    }
+
+    public int getLabel() {
+        return label;
+    }
+
+    public Point2d getPosition() {
+        return new Point2d(x, y);
+    }
+
+    public Vector2d getOrientation() {
+        return new Vector2d(dx, dy);
+    }
+
+    public float[] getCorners() {
+        return corners;
+    }
+
+    public Point2d getUpperLeftROI() {
+        return upperLeftROI;
+    }
+
+    public void setUpperLeftROI(Point2d upperLeftROI) {
+        this.upperLeftROI = upperLeftROI;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public Vector2d getRelLowerEdgeMidPoint() {
+        return relLowerEdgeMidPoint;
+    }
+
+    public void setRelLowerEdgeMidPoint(Vector2d relLowerEdgeMidPoint) {
+        this.relLowerEdgeMidPoint = relLowerEdgeMidPoint;
+    }
+
+    public String getFname() {
+        return fname;
+    }
+}
