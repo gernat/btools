@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import edu.illinois.gernat.btools.behavior.egglaying.geometry.ROI;
-import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
+import edu.illinois.gernat.btools.behavior.egglaying.io.LabeledBee;
 import edu.illinois.gernat.btools.behavior.egglaying.io.write.OutputWriter;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.ROICalculator;
 import edu.illinois.gernat.btools.behavior.trophallaxis.io.read.ImageSource;
@@ -35,13 +35,13 @@ public abstract class Processor {
      *
      * @param bees map from hive image paths to bCode descriptions (bees)
      */
-    public void process(Map<String, ArrayList<Bee>> bees) {
+    public void process(Map<String, ArrayList<LabeledBee>> bees) {
         for (String imageFName : bees.keySet()) {
 
             if (!imageSource.invoke(imageFName)) continue;
             BufferedImage hive = imageSource.getHiveImage();
 
-            for (Bee bee : bees.get(imageFName)) {
+            for (LabeledBee bee : bees.get(imageFName)) {
                 BufferedImage manipulated = processSingle(hive, bee);
                 writer.write(imageFName, bee, manipulated);
             }
@@ -58,7 +58,7 @@ public abstract class Processor {
      * @param bee  description of the current bCode
      * @return clipped and manipulated small image
      */
-    public BufferedImage processSingle(BufferedImage hive, Bee bee) {
+    public BufferedImage processSingle(BufferedImage hive, LabeledBee bee) {
         ROI subImageDesc = null;
         if (roiCalculator != null) {
             subImageDesc = roiCalculator.calcROI(bee);

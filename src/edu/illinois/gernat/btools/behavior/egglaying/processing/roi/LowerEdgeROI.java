@@ -4,7 +4,7 @@ import edu.illinois.gernat.btools.behavior.egglaying.geometry.Line2d;
 import edu.illinois.gernat.btools.behavior.egglaying.geometry.Point2d;
 import edu.illinois.gernat.btools.behavior.egglaying.geometry.ROI;
 import edu.illinois.gernat.btools.behavior.egglaying.geometry.Vector2d;
-import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
+import edu.illinois.gernat.btools.behavior.egglaying.io.LabeledBee;
 
 /**
  * Created by tobias on 02.10.16.
@@ -30,7 +30,7 @@ public class LowerEdgeROI implements ROICalculator {
      *            the corners of the bCode
      * @return upper left corner and the rotation angle of the interesting region of the bee
      */
-    public ROI calcROI(Bee bee) {
+    public ROI calcROI(LabeledBee bee) {
         Vector2d north = bee.getOrientation().normalize();
         float[] corners = bee.getCorners();
         Vector2d south = north.negate();

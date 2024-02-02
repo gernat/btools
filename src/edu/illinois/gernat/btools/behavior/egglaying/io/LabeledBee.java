@@ -6,7 +6,7 @@ import edu.illinois.gernat.btools.behavior.egglaying.geometry.Vector2d;
 /**
  * Created by tobias on 21.09.16.
  */
-public class LabeledBee implements Bee {
+public class LabeledBee {
     private final int id;
     private final float x;
     private final float y;

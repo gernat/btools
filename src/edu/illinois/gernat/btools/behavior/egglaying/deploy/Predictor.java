@@ -17,7 +17,6 @@ import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 
-import edu.illinois.gernat.btools.behavior.egglaying.io.Bee;
 import edu.illinois.gernat.btools.behavior.egglaying.io.LabeledBee;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.MyProcessor;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.Processor;
@@ -134,7 +133,7 @@ public class Predictor {
                 }
                 float[] corners = mID.calculateBoundingBoxCoordinates();
                 switchCoordinates(corners); // convert image coordinates to world coordinates
-                Bee curBee = new LabeledBee(imageBee.id, imageBee.center.x, -imageBee.center.y, imageBee.orientation.dx, -imageBee.orientation.dy, 0, corners);
+                LabeledBee curBee = new LabeledBee(imageBee.id, imageBee.center.x, -imageBee.center.y, imageBee.orientation.dx, -imageBee.orientation.dy, 0, corners);
                 smallImages1[i] = processor1.processSingle(greatImage, curBee);
                 smallImages2[i] = processor2.processSingle(greatImage, curBee);
             }
