@@ -17,7 +17,7 @@
  * along with bTools. If not, see http://www.gnu.org/licenses/.
  */
 
-package edu.illinois.gernat.btools.behavior.trophallaxis;
+package edu.illinois.gernat.btools.behavior.trophallaxis.deploy;
 
 import org.tensorflow.Graph;
 import org.tensorflow.Session;

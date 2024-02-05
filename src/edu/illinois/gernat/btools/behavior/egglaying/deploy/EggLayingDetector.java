@@ -33,7 +33,7 @@ import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
 /**
  * Created by tobias on 10.12.16.
  */
-public class Predictor 
+public class EggLayingDetector 
 {
 		
 	private static final String THIRD_PARTY_LICENSES_FILE = "worker_egg-laying_detector_3rd_party_licenses.txt";

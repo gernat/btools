@@ -17,7 +17,7 @@
  * along with bTools. If not, see http://www.gnu.org/licenses/.
  */
 
-package edu.illinois.gernat.btools.behavior.trophallaxis;
+package edu.illinois.gernat.btools.behavior.trophallaxis.deploy;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -55,7 +55,7 @@ import edu.illinois.gernat.btools.tracking.bcode.MetaCode;
 /**
  * Created by tobias on 10.12.16.
  */
-public class Detector {
+public class TrophallaxisDetector {
 	
 	private static final String THIRD_PARTY_LICENSES_FILE = "trophallaxis_detector_3rd_party_licenses.txt";
 	
