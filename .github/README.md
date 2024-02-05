@@ -16,7 +16,7 @@ If you want to experiment with the code, please choose a branch and download or 
 `Indexer.java` - indexes raw bCode detection results.  
 `TrophallaxisDetector.java` - detects liquid food exchange among honey bees.  
 `MovementDetector.java` - detects bCode movement.  
-`FlightActivityDetector.java` - detects hive exits and returns.
+`FlightActivityDetector.java` - detects hive exits and returns.  
 `EggLayingDetector.java` - detects worker egg-laying.
 
 # Documentation
