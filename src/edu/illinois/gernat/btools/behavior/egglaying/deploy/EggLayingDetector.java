@@ -59,7 +59,7 @@ public class EggLayingDetector
 	
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("Worker egg-laying Detector (bTools) 0.17.0");
+		System.out.println("Worker egg-laying Detector (bTools) 0.18.0");
 		System.out.println("Copyright (C) 2017-2024 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
