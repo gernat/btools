@@ -129,19 +129,18 @@ public class TrophallaxisDetector {
 		System.out.println("                          centers of the head of two potential interaction");
 		System.out.println("                          partners");
 		System.out.println("- input.file              the input image or plain text file");
-		System.out.println("                          file.");
 		System.out.println("- show.credits            set to \"true\" or 1 to display credits and exit");
 		System.out.println();
 		System.out.println("Notes:");
+		System.out.println("If the input.file is a plain text file, this file must list one image or");
+		System.out.println("video file per line.");
+		System.out.println("");
 		System.out.println("Input image filenames need to be a valid date in the format");
-		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS.");
+		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS followed by a dot and the filename extension (e.g.,");
+		System.out.println("2013-07-18-13-57-25-600.jpg)");
 		System.out.println();
-		System.out.println("Parameters image.filename and trophallaxis.file cannot be specified in");
-		System.out.println("conjunction with the input.file parameter.");
-		System.out.println();
-		System.out.println("If the input.file parameter is given, trophallaxis output file names are");
-		System.out.println("constructed by replacing the input image file extension with 'txt'. Input");
-		System.out.println("image file name and extension must be separated by a dot.");
+		System.out.println("Trophallaxis output filenames are constructed by replacing the input image");
+		System.out.println("filename extension with 'txt'.");
 	}
 	
 	private static void showCredits() throws IOException 

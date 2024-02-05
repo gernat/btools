@@ -60,6 +60,9 @@ public class EggLayingDetector
 		System.out.println("- show.credits       set to \"true\" or 1 to display credits and exit");
 		System.out.println();
 		System.out.println("Notes:");
+		System.out.println("If the input.file is a plain text file, this file must list one image or");
+		System.out.println("video file per line.");
+		System.out.println("");
 		System.out.println("Input image filenames need to be a valid date in the format");
 		System.out.println("yyyy-MM-dd-HH-mm-ss-SSS followed by a dot and the filename extension (e.g.,");
 		System.out.println("2013-07-18-13-57-25-600.jpg)");
