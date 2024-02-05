@@ -136,7 +136,7 @@ public class BCodeDetector
 
 	private static void showVersionAndCopyright() 
 	{
-		System.out.println("bCode Detector (bTools) 0.17.0");
+		System.out.println("bCode Detector (bTools) 0.18.0");
 		System.out.println("Copyright (C) 2017-2024 University of Illinois Board of Trustees");
 		System.out.println("License AGPLv3+: GNU AGPL version 3 or later <http://www.gnu.org/licenses/>");
 		System.out.println("This is free software: you are free to change and redistribute it.");
@@ -235,7 +235,7 @@ public class BCodeDetector
 		int frameRate = -1;
 		for (String inputFilename : ioMap.keySet()) 
 		{
-			if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4"))
+			if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4") || inputFilename.endsWith(".mjpeg"))
 			{
 				frameRate = parameters.getInteger("frame.rate");
 				break;
@@ -262,7 +262,7 @@ public class BCodeDetector
 			try
 			{
 				if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png")) bCodeDetectionResults = processImage(inputFilename);
-				else if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
+				else if (inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4") || inputFilename.endsWith(".mjpeg")) bCodeDetectionResults = processVideo(inputFilename, frameRate);
 			}
 			catch (Exception e)
 			{
@@ -302,7 +302,7 @@ public class BCodeDetector
 
 	private static void queueInputFile(HashMap<String, String> ioMap, String inputFilename)
 	{
-		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
+		if (inputFilename.endsWith(".jpg") || inputFilename.endsWith(".png") || inputFilename.endsWith(".h264") || inputFilename.endsWith(".mp4") || inputFilename.endsWith(".mjpeg")) ioMap.put(inputFilename, inputFilename.substring(0, inputFilename.lastIndexOf(".")) + ".txt");
 		else throw new IllegalStateException("bCode detector: unsupported input file extension");
 	}
 	
