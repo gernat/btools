@@ -38,6 +38,8 @@ import edu.illinois.gernat.btools.common.parameters.Parameters;
 public class BCodeMaker
 {
 	
+	private static final String THIRD_PARTY_LICENSES_FILE = "bcode_maker_3rd_party_licenses.txt";
+	
 	private static final int ID_START = 1; // This should never be 0
 	
 	private static final int ID_INCREMENT = 1;
@@ -197,7 +199,7 @@ public class BCodeMaker
 		System.out.println("This software uses the following third party software that is distributed");
 		System.out.println("under its own terms:");
 		System.out.println();
-		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LICENSE-3RD-PARTY"); 
+		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(THIRD_PARTY_LICENSES_FILE); 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		while (reader.ready()) System.out.println(reader.readLine());
 		reader.close();

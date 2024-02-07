@@ -50,6 +50,8 @@ import edu.illinois.gernat.btools.common.parameters.Parameters;
 public class BCodeDetector
 {
 	
+	private static final String THIRD_PARTY_LICENSES_FILE = "bcode_detector_3rd_party_licenses.txt";
+	
 	private static LinkedHashMap<Long, List<MetaCode>> processImage(String inputFilename) throws IOException, ParseException
 	{
 		BufferedImage image = ImageIO.read(new File(inputFilename));
@@ -184,14 +186,15 @@ public class BCodeDetector
 	{
 		showVersionAndCopyright();
 		System.out.println();
-		System.out.println("This software uses the following third party software that is distributed");
-		System.out.println("under its own terms:");
+		System.out.println("This software uses the following third party libraries that are distributed");
+		System.out.println("under their own terms:");
 		System.out.println();
-		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LICENSE-3RD-PARTY"); 
+		InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(THIRD_PARTY_LICENSES_FILE); 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		while (reader.ready()) System.out.println(reader.readLine());
 		reader.close();
-		inputStream.close();		
+		inputStream.close();
+		System.exit(1);	
 	}
 
 	public static void main(String[] args) throws NotFoundException, IOException, ParseException
