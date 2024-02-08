@@ -181,12 +181,12 @@ public class EggLayingDetector
 			Files.deleteIfExists(outputFile.toPath());
 			
 			// detect egg-laying in input file
-			List<Detection> trophallaxisDetectionResults = null;
+			List<Detection> eggLayingDetectionResults = null;
 			try
 			{
 				long timestamp = Images.getTimestampFromFilename(inputFilename);
 				List<Record> bCodeDetections = indexedReader.readThis(timestamp);
-				trophallaxisDetectionResults = processImage(inputFilename, timestamp, bCodeDetections, abdomenROIExtractor, wholeBeeROIExtractor, abdomenCNN, wholeBeeCNN);
+				if (bCodeDetections != null) eggLayingDetectionResults = processImage(inputFilename, timestamp, bCodeDetections, abdomenROIExtractor, wholeBeeROIExtractor, abdomenCNN, wholeBeeCNN);
 			}
 			catch (Exception e)
 			{
@@ -197,7 +197,7 @@ public class EggLayingDetector
 			
 			// write egg-laying detections to file 
 			TokenWriter writer = new TokenWriter(outputFilename);
-			for (Detection detection : trophallaxisDetectionResults) writer.writeTokens(detection); 
+			if (eggLayingDetectionResults != null) for (Detection detection : eggLayingDetectionResults) writer.writeTokens(detection); 
 			writer.close();
 			
 		}	

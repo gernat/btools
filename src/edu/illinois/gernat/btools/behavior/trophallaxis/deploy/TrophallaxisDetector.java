@@ -203,7 +203,7 @@ public class TrophallaxisDetector {
 			{
 				long timestamp = Images.getTimestampFromFilename(inputFilename);
 				List<Record> bCodeDetections = indexedReader.readThis(timestamp);
-				trophallaxisDetectionResults = processImage(inputFilename, timestamp, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum, bCodeDetections, roiExtractor, occurenceDetector, directionDetector);
+				if (bCodeDetections != null) trophallaxisDetectionResults = processImage(inputFilename, timestamp, distanceLabelHead, geometryMinDistance, geometryMaxDistance, geometryMaxAngleSum, bCodeDetections, roiExtractor, occurenceDetector, directionDetector);
 			}
 			catch (Exception e)
 			{
@@ -214,7 +214,7 @@ public class TrophallaxisDetector {
 			
 			// write trophallaxis detections to file 
 			TokenWriter writer = new TokenWriter(outputFilename);
-			for (Detection detection : trophallaxisDetectionResults) writer.writeTokens(detection); 
+			if (trophallaxisDetectionResults != null) for (Detection detection : trophallaxisDetectionResults) writer.writeTokens(detection); 
 			writer.close();
 			
 		}	
