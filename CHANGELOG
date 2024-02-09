@@ -5,6 +5,7 @@
 0.17.0
 
 - Adds MJPEG support to bCode detector.
+- Adds donor and recipient detection to trophallaxis detector.
 - Improves trophallaxis detector performance. 
 
 0.16.0
