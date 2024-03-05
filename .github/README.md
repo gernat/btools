@@ -10,7 +10,7 @@ If you want to experiment with the code, please choose a branch and download or 
 
 ## Tools
 
-`BCodeMaker.jar` - draws 2048 unique printable bCodes.  
+`BCodeMaker.jar` - draws 2048 unique, printable bCodes.  
 `BCodeDetector.jar` - detects bCodes in digital images.  
 `Converter.jar` - converts raw bCode detection results to a more useful format.  
 `Indexer.jar` - indexes raw bCode detection results.  
