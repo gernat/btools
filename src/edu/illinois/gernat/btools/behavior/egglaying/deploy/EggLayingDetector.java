@@ -41,6 +41,7 @@ import edu.illinois.gernat.btools.behavior.egglaying.processing.MyProcessor;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.Processor;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.DiagonalBee;
 import edu.illinois.gernat.btools.behavior.egglaying.processing.roi.LowerEdgeROI;
+import edu.illinois.gernat.btools.behavior.trophallaxis.deploy.NeuralNetwork;
 import edu.illinois.gernat.btools.behavior.trophallaxis.processing.image.MyLookUpOp;
 import edu.illinois.gernat.btools.common.image.Images;
 import edu.illinois.gernat.btools.common.io.record.IndexedReader;
@@ -124,37 +125,26 @@ public class EggLayingDetector
 		else throw new IllegalStateException("Worker egg-laying detector: unsupported input file extension");
 	}
 
+	private static NeuralNetwork createCNN(String filename, int inputImageSideLength) throws IOException 
+	{
+		
+		// extract CNN model
+		InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+		File target = File.createTempFile("trophallaxis_detector", ".pb");
+		target.deleteOnExit();
+		Files.copy(source, target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        
+        // return CNN
+        return(new NeuralNetwork(target.getPath(), inputImageSideLength, inputImageSideLength));
+        
+	}
+	
 	private static void processInputFiles(HashMap<String, String> ioMap, String bCodeDetectionPath) throws IOException, ParseException
 	{
 		
-		// extract CNN models
-        File s1Folder = Files.createTempDirectory("s1_01").toFile();
-        s1Folder.deleteOnExit();
-        InputStream s1ckptJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_abdomen_model.ckpt");
-        File s1ckpt = File.createTempFile("s1model",".ckpt",s1Folder);
-        s1ckpt.deleteOnExit();
-        Files.copy(s1ckptJAR, s1ckpt.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-        InputStream s1modelJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_abdomen_model.proto");
-        File s1model = File.createTempFile("s1model",".proto",s1Folder);
-        s1model.deleteOnExit();
-        Files.copy(s1modelJAR, s1model.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-        File s2Folder = Files.createTempDirectory("s2_02").toFile();
-        s2Folder.deleteOnExit();
-        InputStream s2ckptJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_whole-bee_model.ckpt");
-        File s2ckpt = File.createTempFile("s2model",".ckpt",s2Folder);
-        s2ckpt.deleteOnExit();
-        Files.copy(s2ckptJAR, s2ckpt.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-        InputStream s2modelJAR = Thread.currentThread().getContextClassLoader().getResourceAsStream("egg-laying_whole-bee_model.proto");
-        File s2model = File.createTempFile("s2model",".proto",s2Folder);
-        s2model.deleteOnExit();
-        Files.copy(s2modelJAR, s2model.toPath(), StandardCopyOption.REPLACE_EXISTING);
-		
         // create CNNs
-        NeuralNetwork abdomenCNN = new NeuralNetwork(s1model.getPath(), s1ckpt.getPath(), 130, 130);
-        NeuralNetwork wholeBeeCNN = new NeuralNetwork(s2model.getPath(), s2ckpt.getPath(), 256, 256);
+        NeuralNetwork abdomenCNN = createCNN("egg-laying_abdomen_model.pb", 130);
+        NeuralNetwork wholeBeeCNN = createCNN("egg-laying_whole-bee_model.pb", 256);
 
         // open bCode reader 
         IndexedReader indexedReader = new IndexedReader(bCodeDetectionPath);
