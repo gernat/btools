@@ -23,10 +23,6 @@ If you want to experiment with the code, please choose a branch and download or 
 
 Brief documentation and a tutorial are available in the [wiki](https://github.com/gernat/btools/wiki).
 
-# Versions
-
-bTools uses [Semantic Versioning](http://www.semver.org). The [development branch](https://github.com/gernat/btools/tree/development) is the latest version of bTools, while the [master branch](https://github.com/gernat/btools/tree/master) contains the latest stable release. For information about each release, please check out the [Changelog](https://github.com/gernat/btools/blob/master/CHANGELOG).
-
 # Bug reports
 
 If you find a bug, please submit it as an [Issue](https://github.com/gernat/btools/issues).
@@ -34,6 +30,10 @@ If you find a bug, please submit it as an [Issue](https://github.com/gernat/btoo
 # Contributing
 
 Please consider contributing your improvements and additions by sending a [pull request](https://github.com/gernat/btools/pulls).
+
+# Versions
+
+bTools uses [Semantic Versioning](http://www.semver.org). The [development branch](https://github.com/gernat/btools/tree/development) is the latest version of bTools, while the [master branch](https://github.com/gernat/btools/tree/master) contains the latest stable release. For information about each release, please check out the [Changelog](https://github.com/gernat/btools/blob/master/CHANGELOG).
 
 # License
 
