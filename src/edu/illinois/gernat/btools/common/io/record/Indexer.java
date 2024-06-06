@@ -42,13 +42,22 @@ public class Indexer
 	public static void index(String recordFileName, int eolByteCount) throws IOException
 	{
 		BufferedReader reader = new BufferedReader(new FileReader(new File(recordFileName)), 1024000); 
-		TokenWriter writer = new TokenWriter(getIndexFilenameFor(recordFileName), ",");
+		String indexFilename = getIndexFilenameFor(recordFileName);  
+		TokenWriter writer = new TokenWriter(indexFilename, ",");
 		String line = null;
 		long position = 0;
 		String tMinus1 = "";
 		while ((line = reader.readLine()) != null) 
 		{
+			
 			String t = line.split(",", -1)[Record.TIMESTAMP];
+			if (Long.parseLong(t) < Long.parseLong(tMinus1)) 
+			{
+				writer.close();
+				new File(indexFilename).delete();
+				reader.close();
+				throw new IllegalStateException("Input file must be sorted by timestamp column.");
+			}
 			if (!t.equals(tMinus1)) 
 			{
 				writer.writeTokens(t, position);
