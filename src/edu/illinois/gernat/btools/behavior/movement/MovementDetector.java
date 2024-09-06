@@ -71,7 +71,7 @@ public class MovementDetector
 					
 					// write movement to file if the linear and/or angular 
 					// displacement is within the specified thresholds
-					if (((minLinearDisplacement != -1) && (minAngularDisplacement != -1) && ((distance >= minLinearDisplacement) || (Math.abs(angle) >= minAngularDisplacement))) || ((maxLinearDisplacement != -1) && (maxAngularDisplacement != -1) && (distance <= maxLinearDisplacement) && (Math.abs(angle) <= maxAngularDisplacement)) || ((minLinearDisplacement != -1) && (minAngularDisplacement != -1) && (maxLinearDisplacement != -1) && (maxAngularDisplacement != -1))) movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
+					if (((minLinearDisplacement != -1) && (minAngularDisplacement != -1) && ((distance >= minLinearDisplacement) || (Math.abs(angle) >= minAngularDisplacement))) || ((maxLinearDisplacement != -1) && (maxAngularDisplacement != -1) && (distance <= maxLinearDisplacement) && (Math.abs(angle) <= maxAngularDisplacement)) || ((minLinearDisplacement == -1) && (minAngularDisplacement == -1) && (maxLinearDisplacement == -1) && (maxAngularDisplacement == -1))) movementWriter.writeTokens(timestamp, record.id, (float) (distance * mmPerPixel), angle);
 					
 				}
 				
