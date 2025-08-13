@@ -4,17 +4,17 @@ bTools is a set of programs for identifying and tracking insects in images or vi
 
 # Getting started
 
-If you just want to use our software, please download our [most recent release](https://github.com/gernat/btools/releases/) and then follow the instructions in the [wiki](https://github.com/gernat/btools/wiki).
+If you just want to use our software, please download our [most recent release](https://github.com/gernat/btools/releases/) and then follow the [setup instructions](https://github.com/gernat/btools/wiki/Setup) in the [wiki](https://github.com/gernat/btools/wiki).
 
-If you want to experiment with the code, please choose a branch and download or clone the repository. Next, import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go.
+If you want to experiment with the source code, please choose a branch and download or clone the repository. Next, import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go!
 
 # Documentation
 
-Brief documentation and a tutorial are available in the [wiki](https://github.com/gernat/btools/wiki).
+Brief documentation and hands-on tutorials are available in the [wiki](https://github.com/gernat/btools/wiki).
 
 # Bug reports
 
-If you find a bug, please submit it as an [Issue](https://github.com/gernat/btools/issues).
+If you find a bug, please submit it as an [issue](https://github.com/gernat/btools/issues).
 
 # Contributing
 
@@ -26,7 +26,7 @@ bTools uses [Semantic Versioning](http://www.semver.org). The [development branc
 
 # License
 
-This software is distributed under the [GNU Affero General Public License v3 license](https://github.com/gernat/btools/blob/master/LICENSE) and uses third party software that is distributed under its own terms. 
+This software is distributed under the [GNU Affero General Public License v3 license](https://github.com/gernat/btools/blob/master/LICENSE), which means its free and open-source software. :-) It is based on third party libraries that are distributed under their own terms. 
 
 # Contact
 
