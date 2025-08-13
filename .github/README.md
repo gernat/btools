@@ -8,17 +8,6 @@ If you just want to use our software, please download our [most recent release](
 
 If you want to experiment with the code, please choose a branch and download or clone the repository. Next, import the `scr` folder in your favorite IDE, add the JAR packages in the `lib` folder to the Java classpath, and you are ready to go.
 
-## Tools
-
-`BCodeMaker.jar` - draws 2048 unique, printable bCodes.  
-`BCodeDetector.jar` - detects bCodes in digital images.  
-`Converter.jar` - converts raw bCode detection results to a more useful format.  
-`Indexer.jar` - indexes raw bCode detection results.  
-`TrophallaxisDetector.jar` - detects liquid food exchange among honey bees.  
-`MovementDetector.jar` - detects movement.  
-`FlightActivityDetector.jar` - detects hive exits and returns.  
-`EggLayingDetector.jar` - detects worker egg-laying.
-
 # Documentation
 
 Brief documentation and a tutorial are available in the [wiki](https://github.com/gernat/btools/wiki).
